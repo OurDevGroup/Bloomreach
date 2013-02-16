@@ -1,0 +1,24 @@
+<!--- TEMPLATENAME: bloomReachPixel.isml --->
+<script type="text/javascript">
+var br_data = {};
+
+/* --- Begin parameters section: fill in below --- */
+br_data.acct_id = "<isprint value="${pdict.pixelModel.accountID}" encoding="off" />";
+br_data.ptype = "<page type>";
+
+br_data.cat = "<page category, for analytics purposes>";
+br_data.prod_id = "<product id>";
+br_data.prod_name = "<product name>";
+br_data.is_conversion = "<1 if conversion page, otherwise 0>";
+br_data.basket_value = "<basket value>";
+br_data.order_id ="<order id of purchase, if conversion, otherwise blank>";
+/* --- End parameter section --- */
+(function() {
+var brtrk = document.createElement('script');
+brtrk.type = 'text/javascript';
+brtrk.async = true;
+brtrk.src = 'https:' == document.location.protocol ? "https://cdns.brsrvr.com/v1/br-trk-${pdict.pixelModel.accountID}.js" : "http://cdn.brcdn.com/v1/br-trk-${pdict.pixelModel.accountID}.js";
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(brtrk, s);
+})();
+</script>
