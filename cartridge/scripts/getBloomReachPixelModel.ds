@@ -12,7 +12,13 @@
 *
 * For example:
 *
-*-   @input ExampleIn : String This is a sample comment.
+*   @input pageType : String The type of the page, one of: “product”, “category”, “other”
+*	@input category : String If per-category analytics reporting is desired, this field may contain a string used to indicate the category of the page within the site e.g. "lamps", etc. If the page already has a breadcrumb then this could be passed in this parameter using vertical pipe | as a separator e.g. "lamps|desk lamps|dataport lamps"
+*	@input productID : String For product pages, a unique identifier for the product
+*	@input productName : String The name of the product
+* 	@input isConversion : String If the current page is a conversion page, pass 1.  If any other value is passed the value is set to 0
+*	@input basketValue : String For conversion pages, the total price of the checkout basket, in dollars, without any symbols (e.g. "237.00")
+*	@input orderID : String Required for conversion pages, the order id associated with the order  placed (e.g. "12123455")
 *   @output pixelModel : Object
 *
 */
@@ -23,14 +29,15 @@ function execute( args : PipelineDictionary ) : Number
 
 	args.pixelModel = {
 				"accountID": dw.system.Site.getCurrent().getPreferences().getCustom().BR_ClientID, 
-				"pageType" : null, 
-				"category" : null,
-				"productID" : null,
-				"productName" : null, 
-				"isConversion" : null, 
-				"basketValue" : null,
-				"order_id" : null
+				"pageType" : args.pageType, 
+				"category" : args.category,
+				"productID" : args.productID,
+				"productName" : args.productName, 
+				"isConversion" : "0", 
+				"basketValue" : args.basketValue,
+				"orderID" : args.orderID
 			};
 
+	if(args.isConversion == "1" ){args.pixelModel.isConversion = "1";}
    return PIPELET_NEXT;
 }

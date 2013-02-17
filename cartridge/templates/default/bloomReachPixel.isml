@@ -4,14 +4,14 @@ var br_data = {};
 
 /* --- Begin parameters section: fill in below --- */
 br_data.acct_id = "<isprint value="${pdict.pixelModel.accountID}" encoding="off" />";
-br_data.ptype = "<page type>";
+br_data.ptype = "<isprint value="${pdict.pixelModel.pageType}" encoding="off" />";
 
-br_data.cat = "<page category, for analytics purposes>";
-br_data.prod_id = "<product id>";
-br_data.prod_name = "<product name>";
-br_data.is_conversion = "<1 if conversion page, otherwise 0>";
-br_data.basket_value = "<basket value>";
-br_data.order_id ="<order id of purchase, if conversion, otherwise blank>";
+br_data.cat = "<isprint value="${pdict.pixelModel.category}" encoding="off" />";
+br_data.prod_id = "<isprint value="${pdict.pixelModel.productID}" encoding="off" />";
+br_data.prod_name = "<isprint value="${pdict.pixelModel.productName}" encoding="off" />";
+br_data.is_conversion = "<isprint value="${pdict.pixelModel.isConversion}" encoding="off" />";
+br_data.basket_value = "<isprint value="${pdict.pixelModel.basketValue}" encoding="off" />";
+br_data.order_id ="<isprint value="${pdict.pixelModel.orderID}" encoding="off" />";
 /* --- End parameter section --- */
 (function() {
 var brtrk = document.createElement('script');
