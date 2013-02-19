@@ -1,0 +1,67 @@
+/**
+*
+*	@input CurrentRequest : dw.system.Request 
+*   @output ThematicBody : String
+*	@output ThematicHeader : String
+*
+*/
+
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.net );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var httpClient : HTTPClient = new HTTPClient();
+	var output : String;
+	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
+	var brAuth = Site.getCurrent().preferences.custom.BR_AuthID;
+	var brTheme = getQueryVariable(args.CurrentRequest.httpQueryString, Site.getCurrent().preferences.custom.BR_ThemeParam); //args.CurrentRequest.httpParameters.t.value;
+	var url : String = 'http://thematic-id-' + brClient + '.brcdn.com/fetch_thematic/' + brClient + '/' + brAuth + '/' + brTheme + '?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + escape(args.CurrentRequest.httpProtocol + '://' + args.CurrentRequest.httpHost + args.CurrentRequest.httpPath + '?' + args.CurrentRequest.httpQueryString);
+	httpClient.open('GET', url);			
+	httpClient.send();
+	if (httpClient.statusCode == 200)
+	{
+		var objectToParse : String = new String(httpClient.text);	
+		
+		var parseHeaderStart : String = "<!-- BEGIN HTML-HEADER -->";
+		var parseHeaderEnd : String = "<!-- END HTML-HEADER -->";
+		var headerCommLength = parseHeaderStart.length;
+
+		var parseBodyStart : String = "<!-- BEGIN HTML-BODY -->";
+		var parseBodyEnd : String = "<!-- END HTML-BODY -->";
+		var bodyCommLength = parseBodyStart.length;
+
+
+		if(objectToParse.indexOf(parseHeaderStart) != -1){
+			var relStartPos = objectToParse.indexOf(parseHeaderStart) + headerCommLength;
+			var relEndPos = objectToParse.indexOf(parseHeaderEnd);
+			var headerString = objectToParse.slice(relStartPos, relEndPos);
+			args.ThematicHeader = headerString;
+		}
+		
+		if(objectToParse.indexOf(parseBodyStart) != -1){
+			var relStartPos = objectToParse.indexOf(parseBodyStart) + bodyCommLength;
+			var relEndPos = objectToParse.indexOf(parseBodyEnd);
+			var bodyString = objectToParse.slice(relStartPos, relEndPos);
+			args.ThematicBody = bodyString;
+		}
+	}
+	else
+	{
+		return PIPELET_ERROR;
+	}
+
+   return PIPELET_NEXT;
+}
+
+function getQueryVariable(queryString : String, variable : String) {
+    var query = queryString;
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+}
