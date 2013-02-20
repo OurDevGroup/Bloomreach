@@ -1,0 +1,190 @@
+/**
+* Demandware Script File
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+* For example:
+*
+*-   @input ExampleIn : String This is a sample comment.
+*-   @output ExampleOut : Number
+*
+*/
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.catalog);
+importPackage( dw.util);
+importPackage( dw.web);
+importPackage( dw.content);
+
+function execute( args : PipelineDictionary ) : Number
+{
+	var brDir : File = new dw.io.File(File.IMPEX + '/bloomreach/');
+	if(!brDir.exists()){ brDir.mkdirs();}
+
+	var file : File = new dw.io.File(File.IMPEX + '/bloomreach/feed.xml');
+	if(!file.exists()) 
+		{
+			if(!file.createNewFile())
+			{
+				logFailure("File "+file.name+" could not be created!",null);
+				return false;
+			}
+		} 
+	var fileWriter : FileWriter = new FileWriter(file, "UTF-8");
+ 	var xsw : XMLStreamWriter = new XMLStreamWriter(fileWriter);
+
+	xsw.writeStartDocument();
+ 		xsw.writeStartElement("feed"); //<feed> 
+ 			xsw.writeAttribute("xmlns","http://www.w3.org/2005/Atom");
+ 			xsw.writeAttribute("xmlns:g","http://base.google.com/ns/1.0");
+   			xsw.writeStartElement("title"); //  <title>
+   				xsw.writeCharacters("This site's data feed"); /*Make this a configuration*/
+    		xsw.writeEndElement(); // </title>
+    		xsw.writeStartElement("link"); // <link>
+ 				xsw.writeAttribute("href", "http://www.example.com"); // pull the actual site address
+ 				xsw.writeAttribute("rel", "self");
+ 			xsw.writeEndElement(); // 	</link>
+    		xsw.writeStartElement("updated");//	<updated>
+    			xsw.writeCharacters(Date());
+    		xsw.writeEndElement();// </updated>
+    		writeAllCatalogProducts(xsw);  /*Get all the products and create <entry/> elements*/
+    	xsw.writeEndElement();// </feed>
+    xsw.writeEndDocument();
+ 	xsw.close();
+ 	fileWriter.close();	
+
+   return PIPELET_NEXT;
+}
+
+/*likely should add this to a general util class*/
+function logFailure(msg : String, args : Object)
+{
+	var log : Log = null;
+	
+	try
+	{
+		/*Try to get a logger object with a the file name prefix of "BloomReach".  This fails on a daily limit of custom log file names*/
+		log= Logger.getLogger("BloomReach","BloomReach");
+	}
+	catch(e)
+	{
+		/*In event that daily limit is exceded, log to the generic custom log*/
+		log = Logger.getLogger("BloomReach");
+	}
+	
+	log.error(msg,args);
+}
+
+function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
+{
+
+	var products : SeekableIterator = ProductMgr.queryAllSiteProducts();
+	
+	while(products.hasNext())
+	{
+		var product : Product = products.next();
+		xmlWriter.writeStartElement("entry");
+			xmlWriter.writeStartElement("title");
+			xmlWriter.writeCharacters(product.getName());
+			xmlWriter.writeEndElement();
+			xmlWriter.writeStartElement("link");
+			xmlWriter.writeAttribute("href",URLUtils.http('Product-Show', 'pid', product.ID));
+			xmlWriter.writeEndElement();
+			xmlWriter.writeStartElement("summary");
+			xmlWriter.writeCharacters(product.getLongDescription());
+			xmlWriter.writeEndElement();
+			xmlWriter.writeStartElement("g:id");
+			xmlWriter.writeCharacters(product.getID());
+			xmlWriter.writeEndElement();
+			xmlWriter.writeStartElement("g:price");
+			/*Do work for Variation pricing*/
+			xmlWriter.writeEndElement();
+			xmlWriter.writeStartElement("g:availability");
+			/*Not required, but nice to have*/
+			xmlWriter.writeEndElement();
+			xmlWriter.writeStartElement("g:product_type");
+			/*Do work to build Breadcrumb, for Bloomreach.  Doc says required
+			<g:product_type>Consumer Electronics > TVs > Flat Panel TVs</g:product_type>*/
+			xmlWriter.writeStartElement("g:image_link");
+			xmlWriter.writeCharacters(product.getImage("large").absURL); /*prepend site url*/
+			xmlWriter.writeEndElement();
+			xmlWriter.writeEndElement();
+		xmlWriter.writeEndElement();
+		break;
+	}
+	products.close();
+	/*
+<entry><!-- The following attributes are always required -->
+	<title>LG Flatron M2262D 22" Full HD LCD TV</title>
+	<link href="http://www.example.com/electronics/tv/LGM2262D.html"/>
+	<summary>Attractively styled and boasting stunning picture quality, the LG Flatron M2262D 22" Full HD LCD TV is an excellent television/monitor. The LG Flatron M2262D 22" Full HD LCD TV sports a widescreen 1080p panel, perfect for watching movies in their original format, whilst also providing plenty of working space for your other applications. You'll also experience an excellent sound quality with SRS TruSurround HD technology and built-in stereo speakers. Enjoy a broad range of free-to-air digital television channels and digital radio stations on the LG Flatron M2262D thanks to its built-in DVB-T Freeview tuner. Hook up the LG Flatron M2262D 22" Full HD LCD TV to most external devices with ease, thanks to its comprehensive range of ports including 2 HDMI ports, 2 SCART sockets, a DVI connector, a VGA connector and USB connectivity - allowing you to input your own multimedia files.</summary>
+	<g:id>TV_123456</g:id>
+	<g:condition>used</g:condition>
+	<g:price>159.00 USD</g:price>
+	<g:availability>in stock</g:availability>
+	<g:image_link>http://images.example.com/TV_123456.png</g:image_link>
+	<g:shipping>
+		<g:country>US</g:country>
+		<g:service>Standard</g:service>
+		<g:price>14.95 USD</g:price>
+	</g:shipping>
+<!-- The following attributes are required because this item is not apparel or a custom good -->
+	<g:gtin>8808992787426</g:gtin>
+	<g:brand>LG</g:brand>
+	<g:mpn>M2262D-PC</g:mpn>
+<!-- The following attributes are not required for this item, but supplying them is recommended if applicable -->
+	<g:product_type>Consumer Electronics > TVs > Flat Panel TVs</g:product_type>
+</entry>
+	*/
+}
+
+
+/*
+Product name
+Price
+Product Description
+
+- Should be captured in one field, not multiple fields
+- Should contain the entire description including any bullet points
+- If using XML feed, should not contain any special characters like &nbsp;
+URL
+- Should be the canonical URL.
+- Each product should have a unique URL.
+	If multiple products share the same URL, please let us know
+Image URL
+- We recommend 400 by 400 pixels.
+- If there is a URL rule that will allow images to be resized, please let us know
+Bread Crumb
+- Crumb separators should be ASCII characters (even if the feed is unicode)
+
+7.3 Optional Fields
+
+Field
+Brand or Vendor
+Color - e.g. red, blue
+Gender - Female, Male, Unisex
+Size - e.g. S/M/L, size 7, 8, etc.
+Discounted Price - In addition to regular price
+Shipping Info - Free shipping, ships in 2-3 days
+Ratings or reviews
+	e.g. Overall average rating, etc. 4 stars and/or
+	Top 20 review 4+ stars
+Availability/ Inventory
+Description
+*/
+
+
+
+
+
+
+
+
+
