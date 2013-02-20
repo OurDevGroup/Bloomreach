@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?demandware-pipeline version="2.0"?>
+
+<pipeline type="view">
+  <description>This pipeline pulls data from Bloomreach for the other services to process</description>
+  <branch basename="Fetch">
+    <segment>
+      <node>
+        <start-node name="Fetch" secure="false"/>
+        <node-display x="0" y="0"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <interaction-node transaction-required="false">
+          <template buffered="true" dynamic="false" name="staticFetch"/>
+        </interaction-node>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="GetWidget">
+    <segment>
+      <node>
+        <start-node name="GetWidget" secure="false"/>
+        <node-display x="2" y="0"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.type) ? CurrentHttpParameterMap.type.stringValue : ''" key="From_0"/>
+          <key-binding alias="BRWidgetType" key="To_0"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.accountID) ? CurrentHttpParameterMap.accountID.stringValue : ''" key="From_1"/>
+          <key-binding alias="BRWidgetAccountID" key="To_1"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.accountKey) ? CurrentHttpParameterMap.accountKey.stringValue : ''" key="From_2"/>
+          <key-binding alias="BRWidgetAccountKey" key="To_2"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.url) ? CurrentHttpParameterMap.url.stringValue : ''" key="From_3"/>
+          <key-binding alias="BRWidgetURL" key="To_3"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.userAgent) ? CurrentHttpParameterMap.userAgent.stringValue : ''" key="From_4"/>
+          <key-binding alias="BRWidgetUserAgent" key="To_4"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.referrer) ? CurrentHttpParameterMap.referrer.stringValue : ''" key="From_5"/>
+          <key-binding alias="BRWidgetReferrer" key="To_5"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.pageType) ? CurrentHttpParameterMap.pageType.stringValue : ''" key="From_6"/>
+          <key-binding alias="BRWidgetPageType" key="To_6"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.productID) ? CurrentHttpParameterMap.productID.stringValue : ''" key="From_7"/>
+          <key-binding alias="BRWidgetProductID" key="To_7"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.productName) ? CurrentHttpParameterMap.productName.stringValue : ''" key="From_8"/>
+          <key-binding alias="BRWidgetProductName" key="To_8"/>
+          <key-binding alias="!empty(CurrentHttpParameterMap.pageStatus) ? CurrentHttpParameterMap.pageStatus.stringValue : ''" key="From_9"/>
+          <key-binding alias="BRWidgetPageStatus" key="To_9"/>
+        </pipelet-node>
+        <node-display x="0" y="2"/>
+      </node>
+      <simple-transition/>
+      <node>
+        <interaction-node transaction-required="false">
+          <template buffered="true" dynamic="false" name="getWidget"/>
+        </interaction-node>
+        <node-display x="0" y="1"/>
+      </node>
+    </segment>
+  </branch>
+</pipeline>

@@ -1,0 +1,16 @@
+<isscript>
+importScript ('int_bloomreach:getBloomReachWidget.ds');
+
+var widget = getBloomReachWidget(pdict.BRWidgetType, 
+	pdict.BRWidgetAccountID, 
+	pdict.BRWidgetAccountKey, 
+	pdict.BRWidgetURL, 
+	pdict.BRWidgetUserAgent, 
+	pdict.BRWidgetReferrer,
+	pdict.BRWidgetPageType,
+	pdict.BRWidgetProductID,
+	pdict.BRWidgetProductName,
+	pdict.BRWidgetPageStatus);
+</isscript>
+
+<isprint value="${widget}" encoding="off" >
