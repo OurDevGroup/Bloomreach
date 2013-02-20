@@ -11,7 +11,16 @@ importPackage( dw.net );
 
 function getBloomReachWidget(type : String, accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
 	
-	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');;
+	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
+	
+	// if accountID or accountKey are not given, use system defaults
+	if(empty(accountID)){
+	  accountID = Site.getCurrent().preferences.custom.BR_ClientID;
+	}
+	
+	if(empty(accountKey)){
+	  accountKey = Site.getCurrent().preferences.custom.BR_AuthID;
+	}
 	
 	// verify required arguments
 	var isValid : Boolean = validateParameters(type, accountID, accountKey, url, userAgent, referrer, pageType);
@@ -45,8 +54,8 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	var patt  = regExForType( type );
 	var result = patt.exec( text );
 	
-	return result[1];
-	return (result.length == 2) ? result[1] : "";
+	// Return result
+	return (result.length > 1) ? result[1] : "";
 }
 
 
