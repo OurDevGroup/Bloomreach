@@ -85,39 +85,66 @@ function logFailure(msg : String, args : Object)
 function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 {
 
-	var products : SeekableIterator = ProductMgr.queryAllSiteProducts();
+	var products : SeekableIterator = ProductMgr.queryAllSiteProductsSorted();
 	
 	while(products.hasNext())
 	{
 		var product : Product = products.next();
-		xmlWriter.writeStartElement("entry");
-			xmlWriter.writeStartElement("title");
-			xmlWriter.writeCharacters(product.getName());
+		if (!(product.isMaster() && product.variationModel.variants.size() > 0) && !product.isProductSet())/*There is no need to send the parent product in the case of variations.  All info is on the children.*/
+		{
+			xmlWriter.writeStartElement("entry");
+				xmlWriter.writeStartElement("title");
+				xmlWriter.writeCharacters(product.getName());
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("link");
+				xmlWriter.writeAttribute("href",URLUtils.http('Product-Show', 'pid', product.ID));
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("summary");
+				xmlWriter.writeCharacters(product.getLongDescription());
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("g:id");
+				xmlWriter.writeCharacters(product.getID());
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("g:price");
+				xmlWriter.writeCharacters(product.getPriceModel().getPrice());
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("g:availability");
+				switch(product.getAvailabilityModel().getAvailabilityStatus())
+				{
+					case ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK :
+					  	xmlWriter.writeCharacters("in stock");
+					  	break;
+					case ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER :
+						xmlWriter.writeCharacters("preorder");
+						break
+					case ProductAvailabilityModel.AVAILABILITY_STATUS_BACKORDER :
+						xmlWriter.writeCharacters("available for order");				
+					  break;
+					default:
+						xmlWriter.writeCharacters("out of stock");
+				}
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("g:product_type");
+				 /*prepend site url*/
+				/*Do work to build Breadcrumb, for Bloomreach.  Doc says required
+				<g:product_type>Consumer Electronics > TVs > Flat Panel TVs</g:product_type>*/
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("g:color");
+				xmlWriter.writeEndElement();
+				xmlWriter.writeStartElement("g:size");
+				xmlWriter.writeEndElement();
+				if(!product.isMaster())
+				{
+					xmlWriter.writeStartElement("g:item_group_id");
+					xmlWriter.writeCharacters(product.getVariationModel().getMaster().getID())
+					xmlWriter.writeEndElement();
+				}
+				xmlWriter.writeStartElement("g:image_link");
+				xmlWriter.writeCharacters(product.getImage("large").absURL); /*prepend site url*/
+				xmlWriter.writeEndElement();
 			xmlWriter.writeEndElement();
-			xmlWriter.writeStartElement("link");
-			xmlWriter.writeAttribute("href",URLUtils.http('Product-Show', 'pid', product.ID));
-			xmlWriter.writeEndElement();
-			xmlWriter.writeStartElement("summary");
-			xmlWriter.writeCharacters(product.getLongDescription());
-			xmlWriter.writeEndElement();
-			xmlWriter.writeStartElement("g:id");
-			xmlWriter.writeCharacters(product.getID());
-			xmlWriter.writeEndElement();
-			xmlWriter.writeStartElement("g:price");
-			/*Do work for Variation pricing*/
-			xmlWriter.writeEndElement();
-			xmlWriter.writeStartElement("g:availability");
-			/*Not required, but nice to have*/
-			xmlWriter.writeEndElement();
-			xmlWriter.writeStartElement("g:product_type");
-			/*Do work to build Breadcrumb, for Bloomreach.  Doc says required
-			<g:product_type>Consumer Electronics > TVs > Flat Panel TVs</g:product_type>*/
-			xmlWriter.writeStartElement("g:image_link");
-			xmlWriter.writeCharacters(product.getImage("large").absURL); /*prepend site url*/
-			xmlWriter.writeEndElement();
-			xmlWriter.writeEndElement();
-		xmlWriter.writeEndElement();
-		break;
+			break;
+		}
 	}
 	products.close();
 	/*
