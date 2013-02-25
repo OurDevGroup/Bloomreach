@@ -45,10 +45,10 @@ function execute( args : PipelineDictionary ) : Number
  			xsw.writeAttribute("xmlns","http://www.w3.org/2005/Atom");
  			xsw.writeAttribute("xmlns:g","http://base.google.com/ns/1.0");
    			xsw.writeStartElement("title"); //  <title>
-   				xsw.writeCharacters("This site's data feed"); /*Make this a configuration*/
+   				xsw.writeCharacters("Google Base data feed"); 
     		xsw.writeEndElement(); // </title>
     		xsw.writeStartElement("link"); // <link>
- 				xsw.writeAttribute("href", "http://www.example.com"); // pull the actual site address
+ 				xsw.writeAttribute("href", "http://" + Site.getCurrent().getHttpHostName()); 
  				xsw.writeAttribute("rel", "self");
  			xsw.writeEndElement(); // 	</link>
     		xsw.writeStartElement("updated");//	<updated>
@@ -60,6 +60,18 @@ function execute( args : PipelineDictionary ) : Number
  	xsw.close();
  	fileWriter.close();	
 
+	var zipfile : File = new dw.io.File(File.IMPEX + '/bloomreach/feed' +  StringUtils.formatCalendar(Calendar(),'yyyyMMdd') + '.zip');
+	if(!file.exists()) 
+		{
+			if(!file.createNewFile())
+			{
+				logFailure("File "+file.name+" could not be created!",null);
+				return false;
+			}
+		} 
+	file.zip(zipfile);
+	file.remove();
+	
    return PIPELET_NEXT;
 }
 
@@ -142,11 +154,11 @@ function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 						xmlWriter.writeCharacters(product.getVariationModel().getMaster().getID())
 						xmlWriter.writeEndElement();
 					}
-					/*If */
 					xmlWriter.writeStartElement("g:image_link");
 					if(product.getImage("large") != null)
 					{
-						xmlWriter.writeCharacters(product.getImage("large").absURL); /*prepend site url*/
+						/*If not using DW imaging, and URL contains '&', make sure to change the below to writeCData(URL) */
+						xmlWriter.writeCharacters(product.getImage("large").absURL); 
 					}
 					xmlWriter.writeEndElement();
 				xmlWriter.writeEndElement();
@@ -158,11 +170,12 @@ function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 		logFailure(e.toString());
 	}
 	products.close();
+	
 }
 
 function getProductCategories(xmlWriter : XMLStreamWriter, product: Product)
 {
-	/*<g:product_type>Consumer Electronics | TVs | Flat Panel TVs</g:product_type>*/
+	/*<g:product_type><![CDATA[Dress Shirts > Clothing > Mens]]></g:product_type>*/
 		xmlWriter.writeStartElement("g:product_type");
 		var category : dw.catalog.Category = null;
 		var masterProduct : Product = product; // categories are on master products
