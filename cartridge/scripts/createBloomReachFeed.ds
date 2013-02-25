@@ -86,110 +86,128 @@ function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 {
 
 	var products : SeekableIterator = ProductMgr.queryAllSiteProductsSorted();
-	
-	while(products.hasNext())
+	try
 	{
-		var product : Product = products.next();
-		if (!(product.isMaster() && product.variationModel.variants.size() > 0) && !product.isProductSet())/*There is no need to send the parent product in the case of variations.  All info is on the children.*/
+		while(products.hasNext())
 		{
-			xmlWriter.writeStartElement("entry");
-				xmlWriter.writeStartElement("title");
-				xmlWriter.writeCharacters(product.getName());
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("link");
-				xmlWriter.writeAttribute("href",URLUtils.http('Product-Show', 'pid', product.ID));
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("summary");
-				xmlWriter.writeCharacters(product.getLongDescription());
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("g:id");
-				xmlWriter.writeCharacters(product.getID());
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("g:price");
-				xmlWriter.writeCharacters(product.getPriceModel().getPrice());
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("g:availability");
-				switch(product.getAvailabilityModel().getAvailabilityStatus())
-				{
-					case ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK :
-					  	xmlWriter.writeCharacters("in stock");
-					  	break;
-					case ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER :
-						xmlWriter.writeCharacters("preorder");
-						break
-					case ProductAvailabilityModel.AVAILABILITY_STATUS_BACKORDER :
-						xmlWriter.writeCharacters("available for order");				
-					  break;
-					default:
-						xmlWriter.writeCharacters("out of stock");
-				}
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("g:product_type");
-				 /*prepend site url*/
-				/*Do work to build Breadcrumb, for Bloomreach.  Doc says required
-				<g:product_type>Consumer Electronics > TVs > Flat Panel TVs</g:product_type>*/
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("g:color");
-				xmlWriter.writeEndElement();
-				xmlWriter.writeStartElement("g:size");
-				xmlWriter.writeEndElement();
-				if(!product.isMaster())
-				{
-					xmlWriter.writeStartElement("g:item_group_id");
-					xmlWriter.writeCharacters(product.getVariationModel().getMaster().getID())
+			var product : Product = products.next();
+			if (!(product.isMaster() && product.variationModel.variants.size() > 0) && !product.isProductSet())/*There is no need to send the parent product in the case of variations.  All info is on the children.*/
+			{
+				xmlWriter.writeStartElement("entry");
+					xmlWriter.writeStartElement("title");
+					xmlWriter.writeCData(product.getName());
 					xmlWriter.writeEndElement();
-				}
-				xmlWriter.writeStartElement("g:image_link");
-				xmlWriter.writeCharacters(product.getImage("large").absURL); /*prepend site url*/
+					xmlWriter.writeStartElement("link");
+					xmlWriter.writeAttribute("href",URLUtils.http('Product-Show', 'pid', product.ID));
+					xmlWriter.writeEndElement();
+					xmlWriter.writeStartElement("summary");
+					xmlWriter.writeCData(product.getLongDescription());
+					xmlWriter.writeEndElement();
+					xmlWriter.writeStartElement("g:id");
+					xmlWriter.writeCharacters(product.getID());
+					xmlWriter.writeEndElement();
+					xmlWriter.writeStartElement("g:price");
+					xmlWriter.writeCharacters(product.getPriceModel().getPrice());
+					xmlWriter.writeEndElement();
+					xmlWriter.writeStartElement("g:availability");
+					switch(product.getAvailabilityModel().getAvailabilityStatus())
+					{
+						case ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK :
+						  	xmlWriter.writeCharacters("in stock");
+						  	break;
+						case ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER :
+							xmlWriter.writeCharacters("preorder");
+							break
+						case ProductAvailabilityModel.AVAILABILITY_STATUS_BACKORDER :
+							xmlWriter.writeCharacters("available for order");				
+						  break;
+						default:
+							xmlWriter.writeCharacters("out of stock");
+					}
+					xmlWriter.writeEndElement();
+					getProductCategories(xmlWriter,product);
+					if(!empty(product.getBrand()))
+					{
+						xmlWriter.writeStartElement("g:brand");
+						xmlWriter.writeCData(product.getBrand());
+						xmlWriter.writeEndElement();
+					}
+					xmlWriter.writeStartElement("g:color");
+					xmlWriter.writeEndElement();
+					xmlWriter.writeStartElement("g:size");
+					xmlWriter.writeEndElement();
+					if(product.isVariant() && !product.isMaster())
+					{
+						xmlWriter.writeStartElement("g:item_group_id");
+						xmlWriter.writeCharacters(product.getVariationModel().getMaster().getID())
+						xmlWriter.writeEndElement();
+					}
+					/*If */
+					xmlWriter.writeStartElement("g:image_link");
+					if(product.getImage("large") != null)
+					{
+						xmlWriter.writeCharacters(product.getImage("large").absURL); /*prepend site url*/
+					}
+					xmlWriter.writeEndElement();
 				xmlWriter.writeEndElement();
-			xmlWriter.writeEndElement();
-			break;
+			}
 		}
 	}
+	catch(e)
+	{
+		logFailure(e.toString());
+	}
 	products.close();
-	/*
-<entry><!-- The following attributes are always required -->
-	<title>LG Flatron M2262D 22" Full HD LCD TV</title>
-	<link href="http://www.example.com/electronics/tv/LGM2262D.html"/>
-	<summary>Attractively styled and boasting stunning picture quality, the LG Flatron M2262D 22" Full HD LCD TV is an excellent television/monitor. The LG Flatron M2262D 22" Full HD LCD TV sports a widescreen 1080p panel, perfect for watching movies in their original format, whilst also providing plenty of working space for your other applications. You'll also experience an excellent sound quality with SRS TruSurround HD technology and built-in stereo speakers. Enjoy a broad range of free-to-air digital television channels and digital radio stations on the LG Flatron M2262D thanks to its built-in DVB-T Freeview tuner. Hook up the LG Flatron M2262D 22" Full HD LCD TV to most external devices with ease, thanks to its comprehensive range of ports including 2 HDMI ports, 2 SCART sockets, a DVI connector, a VGA connector and USB connectivity - allowing you to input your own multimedia files.</summary>
-	<g:id>TV_123456</g:id>
-	<g:condition>used</g:condition>
-	<g:price>159.00 USD</g:price>
-	<g:availability>in stock</g:availability>
-	<g:image_link>http://images.example.com/TV_123456.png</g:image_link>
-	<g:shipping>
-		<g:country>US</g:country>
-		<g:service>Standard</g:service>
-		<g:price>14.95 USD</g:price>
-	</g:shipping>
-<!-- The following attributes are required because this item is not apparel or a custom good -->
-	<g:gtin>8808992787426</g:gtin>
-	<g:brand>LG</g:brand>
-	<g:mpn>M2262D-PC</g:mpn>
-<!-- The following attributes are not required for this item, but supplying them is recommended if applicable -->
-	<g:product_type>Consumer Electronics > TVs > Flat Panel TVs</g:product_type>
-</entry>
-	*/
 }
 
+function getProductCategories(xmlWriter : XMLStreamWriter, product: Product)
+{
+	/*<g:product_type>Consumer Electronics | TVs | Flat Panel TVs</g:product_type>*/
+		xmlWriter.writeStartElement("g:product_type");
+		var category : dw.catalog.Category = null;
+		var masterProduct : Product = product; // categories are on master products
+		
+		if(product.isVariant())
+		{
+			masterProduct = product.getVariationModel().getMaster(); 
+		}
+		category = masterProduct.getPrimaryCategory();
+		if(category == null) // No primary category assigned
+		{
+			category = masterProduct.getClassificationCategory();
+		}
+		if(category == null) //no primary or classification category, use first category in list.  
+		{
+			category = masterProduct.getCategories()[0];
+		}
+		
+		if(category != null)
+		{
+			var categoryString: String = "";
+			while( category.parent != null )
+			{
+				if( category.online )
+				{
+					if(categoryString != "") 
+					{
+						categoryString += " > ";
+					}
+					categoryString += category.displayName;
+				}
+				category = category.parent;
+			}
+			xmlWriter.writeCData(categoryString);
+		}
+		xmlWriter.writeEndElement();
+				
+				
+}
 
 /*
-Product name
-Price
-Product Description
 
-- Should be captured in one field, not multiple fields
-- Should contain the entire description including any bullet points
-- If using XML feed, should not contain any special characters like &nbsp;
-URL
 - Should be the canonical URL.
 - Each product should have a unique URL.
 	If multiple products share the same URL, please let us know
-Image URL
-- We recommend 400 by 400 pixels.
-- If there is a URL rule that will allow images to be resized, please let us know
-Bread Crumb
-- Crumb separators should be ASCII characters (even if the feed is unicode)
 
 7.3 Optional Fields
 
