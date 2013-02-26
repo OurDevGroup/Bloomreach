@@ -9,6 +9,39 @@ importPackage( dw.web );
 importPackage( dw.util );
 importPackage( dw.net );
 
+/*
+ This function is responisble for calling BloomReach's servers and returning the full HTML for widgets
+ This function is expected to be called from the BloomReachWidget-GetWidget pipeline.
+*/
+function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
+	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
+	
+	var isValid = validateParametersForBloomReachHTMLFetch(accountID, accountKey, url, userAgent, referrer, pageType);
+	if(!isValid) {
+		logger.error('getBloomReachWidgetHTML called with invalid parameters, see previous messages');
+		return '';
+	}
+	
+	var brURL = 'http://' +  Site.getCurrent().preferences.custom.BR_APIHost +  '.brsrvr.com/v2/fetch_widget'
+	 + '?url='        + url
+	 + '&acct_id='    + accountID
+	 + '&acct_auth='  + accountKey
+	 + '&ptype='      + pageType
+	 + '&user_agent=' + userAgent
+	 + '&ref='        + referrer
+	 + '&prod_id='    + productID
+	 + '&prod_name='  + productName
+	 + '&pstatus='    + pageStatus;
+	
+	return fetchWidgetText(url);
+	
+}
+
+
+/*
+ This funciton is responsible for calling a cached pipeline and returning only the widget html requested in the type parameter. 
+ This function is expected to be called from the BloomReachWidget-GetWidget pipeline.
+*/
 function getBloomReachWidget(type : String, accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
 	
 	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
@@ -23,8 +56,9 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	}
 	
 	// verify required arguments
-	var isValid : Boolean = validateParameters(type, accountID, accountKey, url, userAgent, referrer, pageType);
+	var isValid : Boolean = validateParametersForWidgetFetch(type, accountID, accountKey, url, userAgent, referrer, pageType);
 	if(!isValid) {
+		logger.error('getBloomReachWidget called with invalid parameters, see previous messages');
 		return '';
 	}
 	
@@ -34,8 +68,16 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	productName = (null == productName) ? '' : productName;
 	pageStatus  = (null == pageStatus)  ? '' : pageStatus;
 	
+	url         = escape(url);
+	userAgent   = escape(userAgent);
+	referrer    = escape(referrer);
+	pageType    = escape(pageType);
+	productID   = escape(productID);
+	productName = escape(productName);
+	pageStatus  = escape(pageStatus);
+	
 	// build our URL
-	var url = URLUtils.abs('BloomReachWidget-Fetch', 
+	var brURL = URLUtils.abs('BloomReachWidget-Fetch', 
 							'accountID', accountID, 
 							'accountKey', accountKey, 
 							'url', url, 
@@ -48,7 +90,7 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 
 						
 	// make the call
-	var text = fetchWidgetText( url );
+	var text = fetchWidgetText( brURL );
 	
 	// prase the URL
 	var patt  = regExForType( type );
@@ -59,14 +101,24 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 }
 
 
-function validateParameters(type : String, accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String){
+function validateParametersForWidgetFetch(type : String, accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String){
 	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
-	var isValid : Boolean = true;
+	var isWidgetFetchParamsValid : Boolean = true;
 	
 	if ( empty(type) ) {
 		logger.error('type is a required parameter');
-		isValid = false;
+		isWidgetFetchParamsValid = false;
 	}
+	
+	var isHTMLFetchParamsValid = validateParametersForBloomReachHTMLFetch(accountID, accountKey, url, userAgent, referrer, pageType);
+
+	return isWidgetFetchParamsValid && isHTMLFetchParamsValid;	
+}
+
+function validateParametersForBloomReachHTMLFetch(accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String){
+	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
+	var isValid : Boolean = true;
+	
 	if ( empty(accountID) ) {
 		logger.error('accountID is a required parameter');
 		isValid = false;
