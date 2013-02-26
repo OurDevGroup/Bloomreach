@@ -21,13 +21,13 @@
           <config-property key="ScriptFile" value="getBloomReachPixelModel.ds"/>
           <key-binding alias="null" key="ScriptLog"/>
           <key-binding alias="pixelModel" key="pixelModel"/>
-          <key-binding alias="CurrentHttpParameterMap.basketValue.stringValue" key="basketValue"/>
+          <key-binding alias="CurrentHttpParameterMap.basketvalue.stringValue" key="basketValue"/>
           <key-binding alias="CurrentHttpParameterMap.category.stringValue" key="category"/>
-          <key-binding alias="CurrentHttpParameterMap.isConversion.stringValue" key="isConversion"/>
-          <key-binding alias="CurrentHttpParameterMap.orderID.stringValue" key="orderID"/>
-          <key-binding alias="CurrentHttpParameterMap.pageType.stringValue" key="pageType"/>
-          <key-binding alias="CurrentHttpParameterMap.productID.stringValue" key="productID"/>
-          <key-binding alias="CurrentHttpParameterMap.productName.stringValue" key="productName"/>
+          <key-binding alias="CurrentHttpParameterMap.isconversion.stringValue" key="isConversion"/>
+          <key-binding alias="CurrentHttpParameterMap.orderid.stringValue" key="orderID"/>
+          <key-binding alias="CurrentHttpParameterMap.pagetype.stringValue" key="pageType"/>
+          <key-binding alias="CurrentHttpParameterMap.productid.stringValue" key="productID"/>
+          <key-binding alias="CurrentHttpParameterMap.productname.stringValue" key="productName"/>
         </pipelet-node>
         <node-display x="0" y="2"/>
       </node>
