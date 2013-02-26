@@ -1,36 +1,10 @@
-<iscache type="relative" hour="24"/>
-<isdecorate template="content/home/pt_storefront">		 	
-	<div>
-		<isprint value="${pdict.ThematicBody}" encoding="off"></isprint> 	
-	</div>
-		
-	<script type="text/javascript">
-		var br_data = {};
-		/* --- Begin parameters section: fill in below --- */
-		br_data.acct_id = "${Site.getCurrent().preferences.custom.BR_ClientID}";
-		br_data.ptype = "thematic";
-		br_data.prod_id = "";
-		br_data.prod_name = "";
-		br_data.cat = "";
-		br_data.search_term = "";
-		br_data.is_paid = "0";
-		br_data.session_id = "${pdict.CurrentSession.getSessionID()}";
-		br_data.user_id = "${pdict.CurrentUser.getID()}";
-		br_data.is_conversion = "0";
-		br_data.basket_value = "";
-		
-		/* --- End parameter section --- */
-		
-		var file = ("https:" == document.location.protocol) ? "https://cdns.brsrvr.com/v1/br-trk-${Site.getCurrent().preferences.custom.BR_ClientID}.js" : "http://cdn.brcdn.com/v1/br-trk-${Site.getCurrent().preferences.custom.BR_ClientID}.js";
-		document.write(unescape("%3Cscript src='" + file + "' type='text/javascript'%3E%3C/script%3E"));
-	</script> 	
-		
-		
-	<script type="text/javascript"> 
-	  try { 
-		 var tracker = BrTrk.getTracker(0.2, br_data); 
-		 tracker.enableTracking(); 
-		} 
-		catch(err) {} 
-	</script>		
-</isdecorate>
+<!--- this is a sample template used to render a barebones BloomReach Thematic Page --->
+
+<html>
+<header>
+<iscomponent pipeline="BloomReachTheme-Header" theme="${pdict.BRThemeName}"/>
+</header>
+<body>
+<iscomponent pipeline="BloomReachTheme-Body" theme="${pdict.BRThemeName}"/>
+</body>
+</html>

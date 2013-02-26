@@ -1,14 +1,15 @@
 /**
 *
 *	@input CurrentRequest : dw.system.Request 
-*   @output ThematicBody : String
-*	@output ThematicHeader : String
+*   @output ThematicResponse : String
 *
 */
 
 importPackage( dw.system );
 importPackage( dw.io );
 importPackage( dw.net );
+importPackage( dw.util );
+importPackage( dw.web );
 
 function execute( args : PipelineDictionary ) : Number
 {
@@ -16,36 +17,14 @@ function execute( args : PipelineDictionary ) : Number
 	var output : String;
 	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
 	var brAuth = Site.getCurrent().preferences.custom.BR_AuthID;
-	var brTheme = getQueryVariable(args.CurrentRequest.httpQueryString, Site.getCurrent().preferences.custom.BR_ThemeParam); //args.CurrentRequest.httpParameters.t.value;
+	var brTheme = getQueryVariable(args.CurrentRequest.httpQueryString, Site.getCurrent().preferences.custom.BR_ThemeParam); 
+	//var brTheme = args.CurrentRequest.httpParameters.t.value;
 	var url : String = 'http://thematic.brcdn.com/fetch_thematic/' + brClient + '/' + brAuth + '/v1/' + brTheme + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + escape(args.CurrentRequest.httpProtocol + '://' + args.CurrentRequest.httpHost + args.CurrentRequest.httpPath + '?' + args.CurrentRequest.httpQueryString);
 	httpClient.open('GET', url);			
 	httpClient.send();
 	if (httpClient.statusCode == 200)
 	{
-		var objectToParse : String = new String(httpClient.text);	
-		
-		var parseHeaderStart : String = "<!-- BEGIN HTML-HEADER -->";
-		var parseHeaderEnd : String = "<!-- END HTML-HEADER -->";
-		var headerCommLength = parseHeaderStart.length;
-
-		var parseBodyStart : String = "<!-- BEGIN HTML-BODY -->";
-		var parseBodyEnd : String = "<!-- END HTML-BODY -->";
-		var bodyCommLength = parseBodyStart.length;
-
-
-		if(objectToParse.indexOf(parseHeaderStart) != -1){
-			var relStartPos = objectToParse.indexOf(parseHeaderStart) + headerCommLength;
-			var relEndPos = objectToParse.indexOf(parseHeaderEnd);
-			var headerString = objectToParse.slice(relStartPos, relEndPos);
-			args.ThematicHeader = headerString;
-		}
-		
-		if(objectToParse.indexOf(parseBodyStart) != -1){
-			var relStartPos = objectToParse.indexOf(parseBodyStart) + bodyCommLength;
-			var relEndPos = objectToParse.indexOf(parseBodyEnd);
-			var bodyString = objectToParse.slice(relStartPos, relEndPos);
-			args.ThematicBody = bodyString;
-		}
+		args.ThematicResponse = new String(httpClient.text);
 	}
 	else
 	{
@@ -53,6 +32,49 @@ function execute( args : PipelineDictionary ) : Number
 	}
 
    return PIPELET_NEXT;
+}
+
+function getBloomReachTheme(themePart : String, themeName : String) : String {	
+	var httpClient : HTTPClient = new HTTPClient();
+	
+	var url = URLUtils.abs('BloomReachTheme-Fetch', 
+		't', themeName);
+		
+	httpClient.open('GET', url);			
+	httpClient.send();
+	if (httpClient.statusCode == 200)
+	{
+		return parseThematicResponse(new String(httpClient.text), themePart);
+	}
+	else
+	{
+		return "";
+	}	
+}
+
+function parseThematicResponse(themeResp : String, themePart : String) : String {
+	var objectToParse : String = new String(themeResp);			
+	var parseHeaderStart : String = "<!-- BEGIN HTML-HEADER -->";
+	var parseHeaderEnd : String = "<!-- END HTML-HEADER -->";
+	var headerCommLength = parseHeaderStart.length;
+
+	var parseBodyStart : String = "<!-- BEGIN HTML-BODY -->";
+	var parseBodyEnd : String = "<!-- END HTML-BODY -->";
+	var bodyCommLength = parseBodyStart.length;
+
+	if(objectToParse.indexOf(parseHeaderStart) != -1 && themePart.toLowerCase() == "header"){
+		var relStartPos = objectToParse.indexOf(parseHeaderStart) + headerCommLength;
+		var relEndPos = objectToParse.indexOf(parseHeaderEnd);
+		var headerString = objectToParse.slice(relStartPos, relEndPos);
+		return headerString;
+	}
+	
+	if(objectToParse.indexOf(parseBodyStart) != -1 && themePart.toLowerCase() == "body"){
+		var relStartPos = objectToParse.indexOf(parseBodyStart) + bodyCommLength;
+		var relEndPos = objectToParse.indexOf(parseBodyEnd);
+		var bodyString = objectToParse.slice(relStartPos, relEndPos);
+		return bodyString;
+	}
 }
 
 function getQueryVariable(queryString : String, variable : String) {
