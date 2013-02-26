@@ -17,7 +17,7 @@ function execute( args : PipelineDictionary ) : Number
 	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
 	var brAuth = Site.getCurrent().preferences.custom.BR_AuthID;
 	var brTheme = getQueryVariable(args.CurrentRequest.httpQueryString, Site.getCurrent().preferences.custom.BR_ThemeParam); //args.CurrentRequest.httpParameters.t.value;
-	var url : String = 'http://thematic-id-' + brClient + '.brcdn.com/fetch_thematic/' + brClient + '/' + brAuth + '/' + brTheme + '?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + escape(args.CurrentRequest.httpProtocol + '://' + args.CurrentRequest.httpHost + args.CurrentRequest.httpPath + '?' + args.CurrentRequest.httpQueryString);
+	var url : String = 'http://thematic.brcdn.com/fetch_thematic/' + brClient + '/' + brAuth + '/v1/' + brTheme + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + escape(args.CurrentRequest.httpProtocol + '://' + args.CurrentRequest.httpHost + args.CurrentRequest.httpPath + '?' + args.CurrentRequest.httpQueryString);
 	httpClient.open('GET', url);			
 	httpClient.send();
 	if (httpClient.statusCode == 200)
