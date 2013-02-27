@@ -1,16 +1,19 @@
-<isscript>
-importScript ('int_bloomreach:getBloomReachWidget.ds');
+<iscache type="relative" hour="24" />
 
-var widget = getBloomReachFullWidgetHTML(pdict.BRWidgetType, 
-	pdict.BRWidgetAccountID, 
-	pdict.BRWidgetAccountKey, 
-	pdict.BRWidgetURL, 
-	pdict.BRWidgetUserAgent, 
-	pdict.BRWidgetReferrer,
-	pdict.BRWidgetPageType,
-	pdict.BRWidgetProductID,
-	pdict.BRWidgetProductName,
-	pdict.BRWidgetPageStatus);
+<isscript>
+importScript ("getBloomReachWidget.ds");
+
+var widget = getBloomReachFullWidgetHTML( 
+	pdict.CurrentHttpParameterMap.accountid.stringValue ? pdict.CurrentHttpParameterMap.accountid.stringValue : '', 
+	pdict.CurrentHttpParameterMap.accountkey.stringValue ? pdict.CurrentHttpParameterMap.accountkey : '', 
+	pdict.CurrentHttpParameterMap.url.stringValue ? pdict.CurrentHttpParameterMap.url.stringValue : '', 
+	pdict.CurrentHttpParameterMap.useragent.stringValue ? pdict.CurrentHttpParameterMap.useragent.stringValue : '',
+	pdict.CurrentHttpParameterMap.referrer.stringValue ? pdict.CurrentHttpParameterMap.referrer.stringValue : '',
+	pdict.CurrentHttpParameterMap.pagetype.stringValue ? pdict.CurrentHttpParameterMap.pagetype.stringValue : '',
+	pdict.CurrentHttpParameterMap.productid.stringValue ? pdict.CurrentHttpParameterMap.productid.stringValue : '',
+	pdict.CurrentHttpParameterMap.productname.stringValue ? pdict.CurrentHttpParameterMap.productname.stringValue : '',
+	pdict.CurrentHttpParameterMap.pagestatus.stringValue ? pdict.CurrentHttpParameterMap.pagestatus.stringValue : '');
+
 </isscript>
 
-<isprint value="${widget}" encoding="off" >
+<isprint value="${widget}" encoding="off" />

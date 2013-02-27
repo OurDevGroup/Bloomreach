@@ -43,7 +43,7 @@
     <segment>
       <node>
         <start-node name="GetWidget" secure="false"/>
-        <node-display x="3" y="0"/>
+        <node-display x="2" y="0"/>
       </node>
       <simple-transition/>
       <node>

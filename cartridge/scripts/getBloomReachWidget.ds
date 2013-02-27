@@ -19,10 +19,10 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
 	var isValid = validateParametersForBloomReachHTMLFetch(accountID, accountKey, url, userAgent, referrer, pageType);
 	if(!isValid) {
 		logger.error('getBloomReachWidgetHTML called with invalid parameters, see previous messages');
-		return '';
+		return '<!-- Some parameters are missing from the call, see your logs. -->';
 	}
 	
-	var brURL = 'http://' +  Site.getCurrent().preferences.custom.BR_APIHost +  '.brsrvr.com/v2/fetch_widget'
+	var brURL = Site.getCurrent().preferences.custom.BR_Widget_URL
 	 + '?url='        + url
 	 + '&acct_id='    + accountID
 	 + '&acct_auth='  + accountKey
@@ -33,7 +33,7 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
 	 + '&prod_name='  + productName
 	 + '&pstatus='    + pageStatus;
 	
-	return fetchWidgetText(url);
+	return fetchWidgetText(brURL);
 	
 }
 
@@ -59,7 +59,7 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	var isValid : Boolean = validateParametersForWidgetFetch(type, accountID, accountKey, url, userAgent, referrer, pageType);
 	if(!isValid) {
 		logger.error('getBloomReachWidget called with invalid parameters, see previous messages');
-		return '';
+		return '<!-- Some parameters are missing from the call, see your logs. -->';
 	}
 	
 	// convert null arguments to empty strings
