@@ -32,6 +32,8 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
 	 + '&prod_id='    + productID
 	 + '&prod_name='  + productName
 	 + '&pstatus='    + pageStatus;
+	 
+	 logger.error('Calling:' + brURL);
 	
 	return fetchWidgetText(brURL);
 	

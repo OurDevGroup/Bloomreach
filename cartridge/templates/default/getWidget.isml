@@ -12,5 +12,5 @@ var widget = getBloomReachWidget(pdict.BRWidgetType,
 	pdict.BRWidgetProductName,
 	pdict.BRWidgetPageStatus);
 </isscript>
-
+<!-- BR Widget -->
 <isprint value="${widget}" encoding="off" >
