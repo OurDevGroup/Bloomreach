@@ -1,0 +1,2 @@
+<!--- TEMPLATENAME: staticTheme.isml --->
+<isprint value="${pdict.ThematicResponse}" encoding="off"></isprint>

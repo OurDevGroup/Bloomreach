@@ -1,0 +1,8 @@
+<!--- TEMPLATENAME: getTheme.isml --->
+
+<isscript>
+importScript ('int_bloomreach:getBloomReachTheme.ds'); 
+var themeResponse = getBloomReachTheme(pdict.BRThemePart, pdict.BRThemeName);
+</isscript>
+
+<isprint value="${themeResponse}" encoding="off" >
