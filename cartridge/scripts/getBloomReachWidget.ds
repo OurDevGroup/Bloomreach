@@ -19,7 +19,7 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
 	var isValid = validateParametersForBloomReachHTMLFetch(accountID, accountKey, url, userAgent, referrer, pageType);
 	if(!isValid) {
 		logger.error('getBloomReachWidgetHTML called with invalid parameters, see previous messages');
-		return '<!-- Some parameters are missing from the call, see your logs. -->';
+		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
 	}
 	
 	var brURL = Site.getCurrent().preferences.custom.BR_Widget_URL
@@ -59,7 +59,7 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	var isValid : Boolean = validateParametersForWidgetFetch(type, accountID, accountKey, url, userAgent, referrer, pageType);
 	if(!isValid) {
 		logger.error('getBloomReachWidget called with invalid parameters, see previous messages');
-		return '<!-- Some parameters are missing from the call, see your logs. -->';
+		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
 	}
 	
 	// convert null arguments to empty strings
@@ -78,15 +78,15 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	
 	// build our URL
 	var brURL = URLUtils.abs('BloomReachWidget-Fetch', 
-							'accountID', accountID, 
-							'accountKey', accountKey, 
+							'accountid', accountID, 
+							'accountkey', accountKey, 
 							'url', url, 
-							'userAgent', userAgent, 
+							'useragent', userAgent, 
 							'referrer', referrer, 
-							'pageType', pageType, 
-							'productID', productID, 
-							'productName', productName, 
-							'pageStatus', pageStatus);
+							'pagetype', pageType, 
+							'productid', productID, 
+							'productname', productName, 
+							'pagestatus', pageStatus);
 
 						
 	// make the call
