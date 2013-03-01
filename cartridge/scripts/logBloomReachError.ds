@@ -1,9 +1,4 @@
 importPackage( dw.system );
-importPackage( dw.io );
-importPackage( dw.catalog);
-importPackage( dw.util);
-importPackage( dw.web);
-importPackage( dw.content);
 
 function logFailure(msg : String, args : Object)
 {
@@ -12,7 +7,7 @@ function logFailure(msg : String, args : Object)
 	try
 	{
 		/*Try to get a logger object with a the file name prefix of "BloomReach".  This fails on a daily limit of custom log file names*/
-		log= Logger.getLogger("BloomReach","BloomReach");
+		log=Logger.getLogger("BloomReach","BloomReach");
 	}
 	catch(e)
 	{
@@ -20,5 +15,5 @@ function logFailure(msg : String, args : Object)
 		log = Logger.getLogger("BloomReach");
 	}
 	
-	log.error(msg,args);
+	log.error(msg);
 }
