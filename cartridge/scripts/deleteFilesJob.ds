@@ -1,0 +1,49 @@
+/*
+*Meat of the delete old files job.  look in the entire IMPEX directory
+*and delete all feed files of format (feedxxxxxxxx.zip) a configurable number
+*of days old
+*/
+importPackage( dw.system );
+importPackage( dw.io );
+importPackage( dw.util );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	//get the directory the feed files are in
+	var dir : dw.io.File = new File(dw.io.File.getRootDirectory("IMPEX"), "/bloomreach");
+	var isDir = dir.isDirectory();
+	
+	
+	//get the compare date 	
+	var cal : Calendar = new Calendar(new Date());
+	cal.add(cal.DAY_OF_MONTH, -dw.system.Site.getCurrent().preferences.custom.BR_FeedFile_Expiration);
+	var testy : String = dw.util.StringUtils.formatCalendar(cal, "YYYYMM") + cal.get(cal.DAY_OF_MONTH);
+	var olderThan : Number = parseInt(testy);	
+	
+	//make sure its a directory
+	if(isDir)
+	{
+		//for each File in the directory
+		for each(var tempFile : File in dir.listFiles()){
+			//if the filename is long enough to contain the date
+			if(tempFile.name.length >= 12){
+				
+			//if file is in correct format (feedXXXXXXX.zip) this should get the date as a number
+			var dateNum = parseInt(tempFile.name.substr(4,8));
+			//compare
+			if(dateNum < olderThan){
+				//.remove returns boolean of attempt
+				if(!tempFile.remove()){
+					dw.system.Logger.error("Failed to delete Feed File : {0}", tempFile.name);
+				}
+			
+			}
+			}
+		}
+	}
+	else
+	{
+		return PIPELET_ERROR;
+	}	
+   return PIPELET_NEXT;
+}

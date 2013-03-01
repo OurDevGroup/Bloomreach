@@ -1,8 +1,14 @@
-<!--- TEMPLATENAME: getTheme.isml --->
 
 <isscript>
-importScript ('int_bloomreach:getBloomReachTheme.ds'); 
+importScript ('getBloomReachTheme.ds'); 
 var themeResponse = getBloomReachTheme(pdict.BRThemePart, pdict.BRThemeName);
 </isscript>
 
 <isprint value="${themeResponse}" encoding="off" >
+
+<isif condition="${pdict.BRThemePart == 'header' && themeResponse == null}">
+<META http-equiv="refresh" content="8;URL=${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}">
+<script type="text/javascript">
+document.location = "${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}";
+</script>
+</isif>
