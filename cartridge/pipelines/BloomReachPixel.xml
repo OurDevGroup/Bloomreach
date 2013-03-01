@@ -28,6 +28,7 @@
           <key-binding alias="CurrentHttpParameterMap.pagetype.stringValue" key="pageType"/>
           <key-binding alias="CurrentHttpParameterMap.productid.stringValue" key="productID"/>
           <key-binding alias="CurrentHttpParameterMap.productname.stringValue" key="productName"/>
+          <key-binding alias="CurrentHttpParameterMap.categoryid.stringValue" key="categoryID"/>
         </pipelet-node>
         <node-display x="0" y="2"/>
       </node>
