@@ -13,7 +13,7 @@ importPackage( dw.web );
 importScript ("logBloomReachError.ds");
 
 function execute( args : PipelineDictionary ) : Number
-{
+{	
 	var httpClient : HTTPClient = new HTTPClient();
 	var output : String;
 	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
@@ -29,6 +29,7 @@ function execute( args : PipelineDictionary ) : Number
 	}
 	else
 	{
+		logFailure("BloomReach theme returned status code " + httpClient.statusCode + " for " + url, null);
 		return PIPELET_ERROR;
 	}
 
@@ -49,7 +50,7 @@ function getBloomReachTheme(themePart : String, themeName : String) : String {
 	}
 	else
 	{
-		logFailure("BloomReach theme returned status code " + httpClient.statusCode, null);
+		logFailure("BloomReach theme part returned status code " + httpClient.statusCode + " for " + url, null);
 		return "";
 	}	
 }
