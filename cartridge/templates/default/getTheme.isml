@@ -1,6 +1,6 @@
 
 <isscript>
-importScript ('Ryan:getBloomReachTheme.ds'); 
+importScript ('getBloomReachTheme.ds'); 
 var themeResponse = getBloomReachTheme(pdict.BRThemePart, pdict.BRThemeName);
 </isscript>
 
