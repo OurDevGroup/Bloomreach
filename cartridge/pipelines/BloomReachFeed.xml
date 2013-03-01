@@ -11,7 +11,7 @@
       </node>
       <simple-transition>
         <transition-display>
-          <bend-point relative-to="target" x="0" y="-1"/>
+          <bend-point relative-to="source" x="0" y="1"/>
         </transition-display>
       </simple-transition>
       <node>
@@ -20,8 +20,25 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="createBloomReachFeed.ds"/>
           <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="FeedFileName" key="FeedFileName"/>
         </pipelet-node>
-        <node-display x="0" y="2"/>
+        <node-display x="0" y="1"/>
+      </node>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
+      <node>
+        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+          <config-property key="Transactional" value="false"/>
+          <config-property key="OnError" value="PIPELET_ERROR"/>
+          <config-property key="ScriptFile" value="sendFeedFTP.ds"/>
+          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="&quot;bloomreach/FeedFileName&quot;" key="source"/>
+          <key-binding alias="FeedFileName" key="destination"/>
+        </pipelet-node>
+        <node-display x="0" y="1"/>
       </node>
       <simple-transition>
         <transition-display>

@@ -1,0 +1,48 @@
+/**
+*
+*   @input source : String
+*	@input destination : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.net );
+importPackage( dw.io );
+importScript( 'util.ds' );
+
+function execute( args : PipelineDictionary ) : Number
+{	
+	var ftp : FTPClient = new FTPClient();
+	var file : File = new File('/IMPEX/' + args.source);
+	
+	// Get the BloomReach FTP host and credentials from the BloomReach preferences.
+	var host : String = Site.getCurrent().getPreferences().getCustom()['BR_FTPURL'];
+	var username : String = Site.getCurrent().getPreferences().getCustom()['BR_FTPUsername'];
+	var password : String = Site.getCurrent().getPreferences().getCustom()['BR_FTPPassword'];
+	
+	var connected = false;
+	var uploaded = false;
+	
+	// Connect to the BloomReach FTP server.
+	connected = ftp.connect(host, username, password);
+		
+	if (!connected)
+		logFailure('Unable to connect to host: ' + host, null);
+	
+	// Upload the product feed to the BloomReach FTP server.
+	if (connected){
+		if (file.isFile()){
+			uploaded = ftp.putBinary(args.destination, file);
+		
+			if (!uploaded){
+				logFailure('Failed to upload file ' + file.name + ' to BloomReach FTP host.', null);
+			}
+		}
+		else {
+			logFailure('File "' + file.name + '" does not exist!', null);
+		}
+			
+		ftp.disconnect();
+	}
+	
+	return PIPELET_NEXT;
+}
