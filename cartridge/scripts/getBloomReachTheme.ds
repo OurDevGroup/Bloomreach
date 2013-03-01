@@ -10,6 +10,7 @@ importPackage( dw.io );
 importPackage( dw.net );
 importPackage( dw.util );
 importPackage( dw.web );
+importScript ("logBloomReachError.ds");
 
 function execute( args : PipelineDictionary ) : Number
 {
@@ -48,6 +49,7 @@ function getBloomReachTheme(themePart : String, themeName : String) : String {
 	}
 	else
 	{
+		logFailure("BloomReach theme returned status code " + httpClient.statusCode, null);
 		return "";
 	}	
 }
