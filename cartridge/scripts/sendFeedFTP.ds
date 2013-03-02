@@ -7,7 +7,7 @@
 importPackage( dw.system );
 importPackage( dw.net );
 importPackage( dw.io );
-importScript( 'util.ds' );
+importScript( 'logBloomReachError.ds' );
 
 function execute( args : PipelineDictionary ) : Number
 {	
@@ -26,7 +26,7 @@ function execute( args : PipelineDictionary ) : Number
 	connected = ftp.connect(host, username, password);
 		
 	if (!connected)
-		logFailure('Unable to connect to host: ' + host, null);
+		logFailure('Unable to connect to host: ' + host);
 	
 	// Upload the product feed to the BloomReach FTP server.
 	if (connected){
@@ -34,11 +34,11 @@ function execute( args : PipelineDictionary ) : Number
 			uploaded = ftp.putBinary(args.destination, file);
 		
 			if (!uploaded){
-				logFailure('Failed to upload file ' + file.name + ' to BloomReach FTP host.', null);
+				logFailure('Failed to upload file ' + file.name + ' to BloomReach FTP host.');
 			}
 		}
 		else {
-			logFailure('File "' + file.name + '" does not exist!', null);
+			logFailure('File "' + file.name + '" does not exist!');
 		}
 			
 		ftp.disconnect();

@@ -35,7 +35,7 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="sendFeedFTP.ds"/>
           <key-binding alias="null" key="ScriptLog"/>
-          <key-binding alias="&quot;bloomreach/FeedFileName&quot;" key="source"/>
+          <key-binding alias="&quot;bloomreach/&quot; + FeedFileName" key="source"/>
           <key-binding alias="FeedFileName" key="destination"/>
         </pipelet-node>
         <node-display x="0" y="1"/>

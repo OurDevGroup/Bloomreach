@@ -20,10 +20,11 @@
 */
 importPackage( dw.system );
 importPackage( dw.io );
-importPackage( dw.catalog);
-importPackage( dw.util);
-importPackage( dw.web);
-importPackage( dw.content);
+importPackage( dw.catalog );
+importPackage( dw.util );
+importPackage( dw.web );
+importPackage( dw.content );
+importScript( 'logBloomReachError.ds' );
 
 function execute( args : PipelineDictionary ) : Number
 {
@@ -35,7 +36,7 @@ function execute( args : PipelineDictionary ) : Number
 		{
 			if(!file.createNewFile())
 			{
-				logFailure("File "+file.name+" could not be created!",null);
+				logFailure("File "+file.name+" could not be created!");
 				return false;
 			}
 		} 
@@ -67,7 +68,7 @@ function execute( args : PipelineDictionary ) : Number
 		{
 			if(!file.createNewFile())
 			{
-				logFailure("File "+file.name+" could not be created!",null);
+				logFailure("File "+file.name+" could not be created!");
 				return false;
 			}
 		} 
@@ -77,25 +78,6 @@ function execute( args : PipelineDictionary ) : Number
 	args.FeedFileName = zipfile.getName();
 	
    return PIPELET_NEXT;
-}
-
-/*likely should add this to a general util class*/
-function logFailure(msg : String, args : Object)
-{
-	var log : Log = null;
-	
-	try
-	{
-		/*Try to get a logger object with a the file name prefix of "BloomReach".  This fails on a daily limit of custom log file names*/
-		log= Logger.getLogger("BloomReach","BloomReach");
-	}
-	catch(e)
-	{
-		/*In event that daily limit is exceded, log to the generic custom log*/
-		log = Logger.getLogger("BloomReach");
-	}
-	
-	log.error(msg,args);
 }
 
 function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
