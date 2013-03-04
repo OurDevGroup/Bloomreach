@@ -1,0 +1,18 @@
+/**
+*	logPipelineError.ds
+*	Purpose: Pass in the pipeline variable LOG to the imported logBloomReachError.ds
+*	to log to a specific file
+*   @input LOG : Object
+*
+*/
+importPackage( dw.system );
+importScript('logBloomReachError.ds');
+function execute( args : PipelineDictionary ) : Number
+{
+	try{
+	logFailure(args.LOG.toString(), null);
+	}
+	catch(e){
+	}
+   return PIPELET_NEXT;
+}

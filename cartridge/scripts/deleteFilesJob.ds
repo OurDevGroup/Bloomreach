@@ -12,13 +12,13 @@ function execute( args : PipelineDictionary ) : Number
 	//get the directory the feed files are in
 	var dir : dw.io.File = new File(dw.io.File.getRootDirectory("IMPEX"), "/bloomreach");
 	var isDir = dir.isDirectory();
+	var MyDate = new Date();
+	MyDate.setDate(MyDate.getDate() -dw.system.Site.getCurrent().preferences.custom.BR_FeedFile_Expiration);
 	
+	var dateStr : String;
 	
-	//get the compare date 	
-	var cal : Calendar = new Calendar(new Date());
-	cal.add(cal.DAY_OF_MONTH, -dw.system.Site.getCurrent().preferences.custom.BR_FeedFile_Expiration);
-	var testy : String = dw.util.StringUtils.formatCalendar(cal, "YYYYMM") + cal.get(cal.DAY_OF_MONTH);
-	var olderThan : Number = parseInt(testy);	
+	dateStr =  MyDate.getFullYear() + '' + ('0' + (MyDate.getMonth()+1)).slice(-2) + '' + ('0' + MyDate.getDate()).slice(-2);
+	var olderThan : Number = parseInt(dateStr);	
 	
 	//make sure its a directory
 	if(isDir)

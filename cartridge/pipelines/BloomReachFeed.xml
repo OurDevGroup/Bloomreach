@@ -19,10 +19,13 @@
           <config-property key="Transactional" value="false"/>
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="createBloomReachFeed.ds"/>
-          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="LOG" key="ScriptLog"/>
           <key-binding alias="FeedFileName" key="FeedFileName"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in2" target-path="./b3.1"/>
+        </branch>
       </node>
       <simple-transition>
         <transition-display>
@@ -34,11 +37,46 @@
           <config-property key="Transactional" value="false"/>
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="sendFeedFTP.ds"/>
-          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="LOG" key="ScriptLog"/>
           <key-binding alias="&quot;bloomreach/&quot; + FeedFileName" key="source"/>
           <key-binding alias="FeedFileName" key="destination"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
+        <branch basename="b3" source-connector="error">
+          <transition target-connector="in1"/>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="1" y="0"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="logPipelineError.ds"/>
+                <key-binding alias="LOG" key="ScriptLog"/>
+                <key-binding alias="LOG" key="LOG"/>
+              </pipelet-node>
+              <node-display x="0" y="1"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in2" target-path="./+1"/>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <end-node name="Error"/>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
       </node>
       <simple-transition>
         <transition-display>
@@ -68,21 +106,39 @@
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="deleteFilesJob.ds"/>
           <key-binding alias="LOG" key="ScriptLog"/>
-          <key-binding alias="CurrentJobParameterMap.FeedFileLocation.toString()" key="filePath"/>
-          <key-binding alias="blerb" key="blerb"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
         <branch basename="b2" source-connector="error">
           <transition target-connector="in">
             <transition-display>
               <bend-point relative-to="source" x="2" y="0"/>
-              <bend-point relative-to="target" x="0" y="-1"/>
             </transition-display>
           </transition>
           <segment>
             <node>
-              <end-node name="Error"/>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="logPipelineError.ds"/>
+                <key-binding alias="LOG" key="ScriptLog"/>
+                <key-binding alias="LOG" key="LOG"/>
+              </pipelet-node>
               <node-display x="1" y="1"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in2" target-path="./+1"/>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <end-node name="Error"/>
+              <node-display x="0" y="1"/>
             </node>
           </segment>
         </branch>
