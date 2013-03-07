@@ -18,18 +18,35 @@
           <config-property key="Transactional" value="false"/>
           <config-property key="OnError" value="PIPELET_ERROR"/>
           <config-property key="ScriptFile" value="getBloomReachTheme.ds"/>
-          <key-binding alias="null" key="ScriptLog"/>
+          <key-binding alias="LOG" key="ScriptLog"/>
           <key-binding alias="CurrentRequest" key="CurrentRequest"/>
           <key-binding alias="ThematicResponse" key="ThematicResponse"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
         <branch basename="b2" source-connector="error">
-          <transition target-connector="in">
-            <transition-display>
-              <bend-point relative-to="source" x="1" y="0"/>
-            </transition-display>
-          </transition>
+          <transition target-connector="in"/>
           <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="logPipelineError.ds"/>
+                <key-binding alias="LOG" key="ScriptLog"/>
+                <key-binding alias="LOG" key="LOG"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="1" y="0"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in2" target-path="./+1"/>
+              </branch>
+            </node>
+            <transition target-connector="in1" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
             <node>
               <pipelet-node pipelet-name="Assign" pipelet-set-identifier="bc_api">
                 <config-property key="Transactional" value="false"/>
@@ -54,11 +71,11 @@
                 <key-binding alias="null" key="From_9"/>
                 <key-binding alias="null" key="To_9"/>
               </pipelet-node>
-              <node-display x="1" y="0"/>
+              <node-display x="0" y="1"/>
             </node>
             <transition target-connector="in1" target-path="../+1">
               <transition-display>
-                <bend-point relative-to="source" x="0" y="2"/>
+                <bend-point relative-to="source" x="0" y="1"/>
               </transition-display>
             </transition>
           </segment>
@@ -69,9 +86,13 @@
     <segment>
       <node>
         <join-node/>
-        <node-display x="0" y="1"/>
+        <node-display x="0" y="2"/>
       </node>
-      <simple-transition/>
+      <simple-transition>
+        <transition-display>
+          <bend-point relative-to="source" x="0" y="1"/>
+        </transition-display>
+      </simple-transition>
       <node>
         <interaction-node transaction-required="false">
           <template buffered="true" dynamic="false" name="staticTheme"/>
@@ -199,19 +220,52 @@
           <config-property key="ScriptFile" value="getBloomReachThemeName.ds"/>
           <key-binding alias="CurrentRequest" key="CurrentRequest"/>
           <key-binding alias="BRThemeName" key="ThemeName"/>
+          <key-binding alias="LOG" key="ScriptLog"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="error">
+          <transition target-connector="in">
+            <transition-display>
+              <bend-point relative-to="source" x="1" y="0"/>
+            </transition-display>
+          </transition>
+          <segment>
+            <node>
+              <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                <config-property key="Transactional" value="false"/>
+                <config-property key="OnError" value="PIPELET_ERROR"/>
+                <config-property key="ScriptFile" value="logPipelineError.ds"/>
+                <key-binding alias="LOG" key="ScriptLog"/>
+                <key-binding alias="LOG" key="LOG"/>
+              </pipelet-node>
+              <node-display orientation="horizontal" x="1" y="0"/>
+              <branch basename="b2" source-connector="error">
+                <transition target-connector="in1" target-path="./+1"/>
+              </branch>
+            </node>
+            <transition target-connector="in2" target-path="./+1"/>
+          </segment>
+          <segment>
+            <node>
+              <join-node/>
+              <node-display x="0" y="1"/>
+            </node>
+            <simple-transition/>
+            <node>
+              <interaction-node transaction-required="false">
+                <template buffered="true" dynamic="false" name="BRError_blank.isml"/>
+              </interaction-node>
+              <node-display x="0" y="1"/>
+            </node>
+          </segment>
+        </branch>
       </node>
-      <simple-transition>
-        <transition-display>
-          <bend-point relative-to="source" x="0" y="1"/>
-        </transition-display>
-      </simple-transition>
+      <simple-transition/>
       <node>
         <interaction-node transaction-required="false">
           <template buffered="true" dynamic="false" name="bloomReachTheme"/>
         </interaction-node>
-        <node-display x="0" y="1"/>
+        <node-display x="0" y="2"/>
       </node>
     </segment>
   </branch>
