@@ -8,6 +8,7 @@ importPackage( dw.system );
 importPackage( dw.web );
 importPackage( dw.util );
 importPackage( dw.net );
+importScript ("logBloomReachError.ds");
 
 /*
  This function is responisble for calling BloomReach's servers and returning the full HTML for widgets
@@ -18,7 +19,7 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
 	
 	var isValid = validateParametersForBloomReachHTMLFetch(accountID, accountKey, url, userAgent, referrer, pageType);
 	if(!isValid) {
-		logger.error('getBloomReachWidgetHTML called with invalid parameters, see previous messages');
+		logFailure('getBloomReachWidgetHTML called with invalid parameters, see previous messages');
 		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
 	}
 	
@@ -32,8 +33,6 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
 	 + '&prod_id='    + productID
 	 + '&prod_name='  + productName
 	 + '&pstatus='    + pageStatus;
-	 
-	 logger.error('Calling:' + brURL);
 	
 	return fetchWidgetText(brURL);
 	
@@ -45,8 +44,6 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
  This function is expected to be called from the BloomReachWidget-GetWidget pipeline.
 */
 function getBloomReachWidget(type : String, accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
-	
-	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
 	
 	// if accountID or accountKey are not given, use system defaults
 	if(empty(accountID)){
@@ -60,7 +57,7 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	// verify required arguments
 	var isValid : Boolean = validateParametersForWidgetFetch(type, accountID, accountKey, url, userAgent, referrer, pageType);
 	if(!isValid) {
-		logger.error('getBloomReachWidget called with invalid parameters, see previous messages');
+		logFailure('getBloomReachWidget called with invalid parameters, see previous messages');
 		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
 	}
 	
@@ -108,7 +105,7 @@ function validateParametersForWidgetFetch(type : String, accountID : String, acc
 	var isWidgetFetchParamsValid : Boolean = true;
 	
 	if ( empty(type) ) {
-		logger.error('type is a required parameter');
+		logFailure('type is a required parameter');
 		isWidgetFetchParamsValid = false;
 	}
 	
@@ -122,23 +119,23 @@ function validateParametersForBloomReachHTMLFetch(accountID : String, accountKey
 	var isValid : Boolean = true;
 	
 	if ( empty(accountID) ) {
-		logger.error('accountID is a required parameter');
+		logFailure('accountID is a required parameter');
 		isValid = false;
 	}
 	if ( empty(accountKey) ) {
-		logger.error('accountKey is a required parameter');
+		logFailure('accountKey is a required parameter');
 		isValid = false;
 	}
 	if ( empty(url) ) {
-		logger.error('url is a required parameter');
+		logFailure('url is a required parameter');
 		isValid = false;
 	}
 	if ( empty(userAgent) ) {
-		logger.error('userAgent is a required parameter');
+		logFailure('userAgent is a required parameter');
 		isValid = false;
 	}
 	if ( empty(pageType) ) {
-		logger.error('pageType is a required parameter');
+		logFailure('pageType is a required parameter');
 		isValid = false;
 	}
 	
