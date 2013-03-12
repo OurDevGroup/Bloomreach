@@ -92,21 +92,30 @@ function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 			if (!(product.isMaster() && product.variationModel.variants.size() > 0) && !product.isProductSet())/*There is no need to send the parent product in the case of variations.  All info is on the children.*/
 			{
 				xmlWriter.writeStartElement("entry");
-					xmlWriter.writeStartElement("title");
-					xmlWriter.writeCData(product.getName());
-					xmlWriter.writeEndElement();
+					if(!empty(product.getName()))
+					{ 
+						xmlWriter.writeStartElement("title");
+						xmlWriter.writeCData(product.getName());
+						xmlWriter.writeEndElement();
+					}
 					xmlWriter.writeStartElement("link");
 					xmlWriter.writeAttribute("href",URLUtils.http('Product-Show', 'pid', product.ID));
 					xmlWriter.writeEndElement();
-					xmlWriter.writeStartElement("summary");
-					xmlWriter.writeCData(product.getLongDescription());
-					xmlWriter.writeEndElement();
+					if(!empty(product.getLongDescription())
+					{
+						xmlWriter.writeStartElement("summary");
+						xmlWriter.writeCData(product.getLongDescription());
+						xmlWriter.writeEndElement();
+					}
 					xmlWriter.writeStartElement("g:id");
 					xmlWriter.writeCharacters(product.getID());
 					xmlWriter.writeEndElement();
-					xmlWriter.writeStartElement("g:price");
-					xmlWriter.writeCharacters(product.getPriceModel().getPrice());
-					xmlWriter.writeEndElement();
+					if(product.priceModel != null && product.getPriceModel().getPrice() != MONEY.NOT_AVAILABLE)
+					{
+						xmlWriter.writeStartElement("g:price");
+						xmlWriter.writeCharacters(product.getPriceModel().getPrice());
+						xmlWriter.writeEndElement();
+					}
 					xmlWriter.writeStartElement("g:availability");
 					switch(product.getAvailabilityModel().getAvailabilityStatus())
 					{
@@ -130,23 +139,27 @@ function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 						xmlWriter.writeCData(product.getBrand());
 						xmlWriter.writeEndElement();
 					}
+					/*
 					xmlWriter.writeStartElement("g:color");
 					xmlWriter.writeEndElement();
 					xmlWriter.writeStartElement("g:size");
 					xmlWriter.writeEndElement();
+					*/
 					if(product.isVariant() && !product.isMaster())
 					{
 						xmlWriter.writeStartElement("g:item_group_id");
 						xmlWriter.writeCharacters(product.getVariationModel().getMaster().getID())
 						xmlWriter.writeEndElement();
 					}
-					xmlWriter.writeStartElement("g:image_link");
+					
+					/*If not using DW imaging, and URL contains '&', make sure to change the below to writeCData(URL) */
 					if(product.getImage("large") != null)
 					{
-						/*If not using DW imaging, and URL contains '&', make sure to change the below to writeCData(URL) */
+						xmlWriter.writeStartElement("g:image_link");
 						xmlWriter.writeCharacters(product.getImage("large").absURL); 
+						xmlWriter.writeEndElement();
 					}
-					xmlWriter.writeEndElement();
+					
 				xmlWriter.writeEndElement();
 			}
 		}
