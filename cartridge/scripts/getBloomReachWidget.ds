@@ -96,7 +96,7 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	var result = patt.exec( text );
 	
 	// Return result
-	return (result.length > 1) ? result[1] : "";
+	return (result != null && result.length > 1) ? result[1] : "";
 }
 
 
