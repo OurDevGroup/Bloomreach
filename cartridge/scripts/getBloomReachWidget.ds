@@ -89,7 +89,7 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 
 						
 	// make the call
-	var text = fetchWidgetText( brURL );
+	var text = fetchWidgetText( brURL,Site.getCurrent().preferences.custom.BR_Widget_API_Timeout );
 	
 	// prase the URL
 	var patt  = regExForType( type );
@@ -142,11 +142,12 @@ function validateParametersForBloomReachHTMLFetch(accountID : String, accountKey
 	return isValid;
 }
 
-function fetchWidgetText(url : String) {
+function fetchWidgetText(url : String, timeout:Number) {
 
 	var httpClient : HTTPClient = new HTTPClient();
 	var text : String;
 	httpClient.open('GET', url);
+	if(!empty(timeout))httpClient.setTimeout(timeout);
 	httpClient.send();
  
 	if (httpClient.statusCode == 200) {
