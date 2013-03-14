@@ -101,7 +101,7 @@ function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 					xmlWriter.writeStartElement("link");
 					xmlWriter.writeAttribute("href",URLUtils.http('Product-Show', 'pid', product.ID));
 					xmlWriter.writeEndElement();
-					if(!empty(product.getLongDescription())
+					if(!empty(product.getLongDescription()))
 					{
 						xmlWriter.writeStartElement("summary");
 						xmlWriter.writeCData(product.getLongDescription());
@@ -110,7 +110,7 @@ function writeAllCatalogProducts(xmlWriter : XMLStreamWriter)
 					xmlWriter.writeStartElement("g:id");
 					xmlWriter.writeCharacters(product.getID());
 					xmlWriter.writeEndElement();
-					if(product.priceModel != null && product.getPriceModel().getPrice() != MONEY.NOT_AVAILABLE)
+					if(product.priceModel != null && product.getPriceModel().getPrice() != dw.value.Money.NOT_AVAILABLE)
 					{
 						xmlWriter.writeStartElement("g:price");
 						xmlWriter.writeCharacters(product.getPriceModel().getPrice());
