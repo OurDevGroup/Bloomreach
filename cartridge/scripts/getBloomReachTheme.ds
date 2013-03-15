@@ -1,6 +1,8 @@
 /**
 *
 *	@input CurrentRequest : dw.system.Request 
+*	@input BRThemeName : String
+*	@input ReferURL : String
 *   @output ThematicResponse : String
 *
 */
@@ -18,9 +20,7 @@ function execute( args : PipelineDictionary ) : Number
 	var output : String;
 	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
 	var brAuth = Site.getCurrent().preferences.custom.BR_AuthID;
-	var brTheme = getQueryVariable(args.CurrentRequest.httpQueryString, Site.getCurrent().preferences.custom.BR_ThemeParam); 
-	//var brTheme = args.CurrentRequest.httpParameters.t.value;
-	var url : String = 'http://thematic.brcdn.com/fetch_thematic/' + brClient + '/' + brAuth + '/v1/' + brTheme + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + escape(args.CurrentRequest.httpProtocol + '://' + args.CurrentRequest.httpHost + args.CurrentRequest.httpPath + '?' + args.CurrentRequest.httpQueryString);
+	var url : String = 'http://thematic.brcdn.com/fetch_thematic/' + brClient + '/' + brAuth + '/v1/' + args.BRThemeName + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + args.ReferURL;
 	httpClient.open('GET', url);			
 	httpClient.send();
 	if (httpClient.statusCode == 200)
@@ -36,11 +36,13 @@ function execute( args : PipelineDictionary ) : Number
    return PIPELET_NEXT;
 }
 
-function getBloomReachTheme(themePart : String, themeName : String) : String {	
+function getBloomReachTheme(themePart : String, themeName : String, currentRequest : Object) : String {	
 	var httpClient : HTTPClient = new HTTPClient();
 	
+	var referUrl : String = escape(currentRequest.httpProtocol + '://' + currentRequest.httpHost + currentRequest.httpPath + '?' + currentRequest.httpQueryString);
+         
 	var url = URLUtils.abs('BloomReachTheme-Fetch', 
-		't', themeName);
+		'theme', themeName, 'refer', referUrl);
 		
 	httpClient.open('GET', url);			
 	httpClient.send();

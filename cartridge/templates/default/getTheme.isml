@@ -1,7 +1,7 @@
 
 <isscript>
 importScript ('getBloomReachTheme.ds'); 
-var themeResponse = getBloomReachTheme(pdict.BRThemePart, pdict.BRThemeName);
+var themeResponse = getBloomReachTheme(pdict.BRThemePart, pdict.BRThemeName, pdict.ReferURL);
 </isscript>
 
 <isprint value="${themeResponse}" encoding="off" >

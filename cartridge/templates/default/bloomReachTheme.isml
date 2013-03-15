@@ -2,9 +2,18 @@
 
 <html>
 <header>
-<iscomponent pipeline="BloomReachTheme-Header" theme="${pdict.BRThemeName}"/>
+<isscript>
+importScript ('int_bloomreach:getBloomReachTheme.ds'); 
+var themeResponse = getBloomReachTheme("header", pdict.BRThemeName, pdict.CurrentRequest);
+</isscript>
+
+<isprint value="${themeResponse}" encoding="off" >
 </header>
 <body>
-<iscomponent pipeline="BloomReachTheme-Body" theme="${pdict.BRThemeName}"/>
+<isscript> 
+themeResponse = getBloomReachTheme("body", pdict.BRThemeName, pdict.CurrentRequest);
+</isscript>
+
+<isprint value="${themeResponse}" encoding="off" >
 </body>
 </html>
