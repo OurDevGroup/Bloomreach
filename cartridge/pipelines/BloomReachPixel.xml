@@ -11,30 +11,18 @@
       </node>
       <simple-transition>
         <transition-display>
-          <bend-point relative-to="target" x="0" y="-1"/>
+          <bend-point relative-to="source" x="0" y="1"/>
         </transition-display>
       </simple-transition>
       <node>
-        <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
-          <config-property key="Transactional" value="false"/>
-          <config-property key="OnError" value="PIPELET_ERROR"/>
-          <config-property key="ScriptFile" value="getBloomReachPixelModel.ds"/>
-          <key-binding alias="LOG" key="ScriptLog"/>
-          <key-binding alias="pixelModel" key="pixelModel"/>
-          <key-binding alias="CurrentHttpParameterMap.basketvalue.stringValue" key="basketValue"/>
-          <key-binding alias="CurrentHttpParameterMap.category.stringValue" key="category"/>
-          <key-binding alias="CurrentHttpParameterMap.isconversion.stringValue" key="isConversion"/>
-          <key-binding alias="CurrentHttpParameterMap.orderid.stringValue" key="orderID"/>
-          <key-binding alias="CurrentHttpParameterMap.pagetype.stringValue" key="pageType"/>
-          <key-binding alias="CurrentHttpParameterMap.productid.stringValue" key="productID"/>
-          <key-binding alias="CurrentHttpParameterMap.productname.stringValue" key="productName"/>
-          <key-binding alias="CurrentHttpParameterMap.categoryid.stringValue" key="categoryID"/>
-        </pipelet-node>
-        <node-display x="0" y="2"/>
-        <branch basename="b2" source-connector="error">
+        <decision-node condition-key="dw.system.Site.current.preferences.custom.BR_Enable_Pixel == true" condition-operator="expr">
+          <description>If Pixel is not enabled do not render conent</description>
+        </decision-node>
+        <node-display x="0" y="1"/>
+        <branch basename="b2" source-connector="yes">
           <transition target-connector="in">
             <transition-display>
-              <bend-point relative-to="source" x="1" y="0"/>
+              <bend-point relative-to="target" x="0" y="-1"/>
             </transition-display>
           </transition>
           <segment>
@@ -42,46 +30,79 @@
               <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
                 <config-property key="Transactional" value="false"/>
                 <config-property key="OnError" value="PIPELET_ERROR"/>
-                <config-property key="ScriptFile" value="logPipelineError.ds"/>
+                <config-property key="ScriptFile" value="getBloomReachPixelModel.ds"/>
                 <key-binding alias="LOG" key="ScriptLog"/>
-                <key-binding alias="LOG" key="LOG"/>
+                <key-binding alias="pixelModel" key="pixelModel"/>
+                <key-binding alias="CurrentHttpParameterMap.basketvalue.stringValue" key="basketValue"/>
+                <key-binding alias="CurrentHttpParameterMap.category.stringValue" key="category"/>
+                <key-binding alias="CurrentHttpParameterMap.isconversion.stringValue" key="isConversion"/>
+                <key-binding alias="CurrentHttpParameterMap.orderid.stringValue" key="orderID"/>
+                <key-binding alias="CurrentHttpParameterMap.pagetype.stringValue" key="pageType"/>
+                <key-binding alias="CurrentHttpParameterMap.productid.stringValue" key="productID"/>
+                <key-binding alias="CurrentHttpParameterMap.productname.stringValue" key="productName"/>
+                <key-binding alias="CurrentHttpParameterMap.categoryid.stringValue" key="categoryID"/>
               </pipelet-node>
-              <node-display orientation="horizontal" x="1" y="0"/>
+              <node-display x="0" y="2"/>
               <branch basename="b2" source-connector="error">
-                <transition target-connector="in2" target-path="./+1"/>
+                <transition target-connector="in">
+                  <transition-display>
+                    <bend-point relative-to="source" x="1" y="0"/>
+                  </transition-display>
+                </transition>
+                <segment>
+                  <node>
+                    <pipelet-node pipelet-name="Script" pipelet-set-identifier="bc_api">
+                      <config-property key="Transactional" value="false"/>
+                      <config-property key="OnError" value="PIPELET_ERROR"/>
+                      <config-property key="ScriptFile" value="logPipelineError.ds"/>
+                      <key-binding alias="LOG" key="ScriptLog"/>
+                      <key-binding alias="LOG" key="LOG"/>
+                    </pipelet-node>
+                    <node-display orientation="horizontal" x="1" y="0"/>
+                    <branch basename="b2" source-connector="error">
+                      <transition target-connector="in2" target-path="../../+1">
+                        <transition-display>
+                          <bend-point relative-to="source" x="0" y="1"/>
+                          <bend-point relative-to="target" x="0" y="1"/>
+                        </transition-display>
+                      </transition>
+                    </branch>
+                  </node>
+                  <transition target-connector="in1" target-path="../../+1"/>
+                </segment>
               </branch>
             </node>
-            <transition target-connector="in1" target-path="./+1"/>
-          </segment>
-          <segment>
-            <node>
-              <join-node/>
-              <node-display x="0" y="1"/>
-            </node>
-            <simple-transition>
-              <transition-display>
-                <bend-point relative-to="source" x="0" y="1"/>
-              </transition-display>
-            </simple-transition>
+            <simple-transition/>
             <node>
               <interaction-node transaction-required="false">
-                <template buffered="true" dynamic="false" name="BRError_blank.isml"/>
+                <template buffered="true" dynamic="false" name="bloomReachPixel.isml"/>
               </interaction-node>
               <node-display x="0" y="1"/>
             </node>
           </segment>
         </branch>
       </node>
+      <transition target-connector="in1" target-path="./+1">
+        <transition-display>
+          <bend-point relative-to="target" x="0" y="-4"/>
+        </transition-display>
+      </transition>
+    </segment>
+    <segment>
+      <node>
+        <join-node/>
+        <node-display x="3" y="2"/>
+      </node>
       <simple-transition>
         <transition-display>
-          <bend-point relative-to="target" x="0" y="-1"/>
+          <bend-point relative-to="source" x="1" y="0"/>
         </transition-display>
       </simple-transition>
       <node>
         <interaction-node transaction-required="false">
-          <template buffered="true" dynamic="false" name="bloomReachPixel.isml"/>
+          <template buffered="true" dynamic="false" name="BRError_blank.isml"/>
         </interaction-node>
-        <node-display x="0" y="2"/>
+        <node-display orientation="horizontal" x="1" y="0"/>
       </node>
     </segment>
   </branch>
