@@ -20,7 +20,7 @@ function execute( args : PipelineDictionary ) : Number
 	var output : String;
 	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
 	var brAuth = Site.getCurrent().preferences.custom.BR_AuthID;
-	var url : String = 'http://thematic.brcdn.com/fetch_thematic/' + brClient + '/' + brAuth + '/v1/' + args.BRThemeName + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + args.ReferURL;
+	var url : String = Site.getCurrent().preferences.custom.BR_Theme_URL + '/' + brClient + '/' + brAuth + '/v1/' + args.BRThemeName + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + args.ReferURL;
 	httpClient.open('GET', url);			
 	httpClient.send();
 	if (httpClient.statusCode == 200)
