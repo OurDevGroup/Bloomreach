@@ -20,6 +20,11 @@ importPackage( dw.catalog );
 function execute( args : PipelineDictionary ) : Number
 {
 
+	if(Site.getCurrent().preferences.custom.BR_ClientID == null) {
+		logFailure("Bloomreach pixel settings not defined.");
+		return PIPELET_ERROR;
+	}
+
 	args.pixelModel = {
 				"accountID": dw.system.Site.getCurrent().getPreferences().getCustom().BR_ClientID, 
 				"pageType" : args.pageType, 
