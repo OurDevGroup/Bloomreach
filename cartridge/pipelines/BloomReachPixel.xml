@@ -3,6 +3,16 @@
 
 <pipeline type="view">
   <description>This pipeline generates the BloomReach pixel include based on attributes passed to it.  This pipeline will be included as a remote include to insure that unique information like basket value.</description>
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Creates and analytics script on the page that provides browsing data to BloomReach</description>
+        </text-node>
+        <node-display x="0" y="0"/>
+      </node>
+    </segment>
+  </branch>
   <branch basename="Show">
     <segment>
       <node>

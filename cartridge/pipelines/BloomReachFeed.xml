@@ -3,6 +3,26 @@
 
 <pipeline type="job">
   <description>This pipeline creates a full product export and sends it to BloomReach via FTP.</description>
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Creates XML file of product data and sends it to BloomReach via SFTP</description>
+        </text-node>
+        <node-display x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_2">
+    <segment>
+      <node>
+        <text-node>
+          <description>Deletes files older than a number of days specified the setting BR_FeedFile_Expiration</description>
+        </text-node>
+        <node-display x="3" y="0"/>
+      </node>
+    </segment>
+  </branch>
   <branch basename="Start">
     <segment>
       <node>
