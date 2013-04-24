@@ -13,6 +13,12 @@ function execute( args : PipelineDictionary ) : Number
 	var dir : dw.io.File = new File(dw.io.File.getRootDirectory("IMPEX"), "/bloomreach");
 	var isDir = dir.isDirectory();
 	var MyDate = new Date();
+	
+	if(Site.getCurrent().preferences.custom.BR_FeedFile_Expiration == null) {
+		logFailure("Bloomreach job settings not defined.");
+		return PIPELET_ERROR;
+	}	
+	
 	MyDate.setDate(MyDate.getDate() -dw.system.Site.getCurrent().preferences.custom.BR_FeedFile_Expiration);
 	
 	var dateStr : String;

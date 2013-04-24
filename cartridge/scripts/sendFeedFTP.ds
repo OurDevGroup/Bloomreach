@@ -16,6 +16,14 @@ function execute( args : PipelineDictionary ) : Number
 	var ftp : FTPClient = new FTPClient();
 	var file : File = new File('/IMPEX/' + args.source);
 	
+	if(	Site.getCurrent().preferences.custom.BR_FTPURL == null ||
+		Site.getCurrent().preferences.custom.BR_FTPUsername == null ||
+		Site.getCurrent().preferences.custom.BR_FTPPassword == null) {
+			logFailure("Bloomreach ftp settings not defined.");
+			return PIPELET_ERROR;
+	}	
+	
+	
 	// Get the BloomReach FTP host and credentials from the BloomReach preferences.
 	var host : String = Site.getCurrent().getPreferences().getCustom()['BR_FTPURL'];
 	var username : String = Site.getCurrent().getPreferences().getCustom()['BR_FTPUsername'];
