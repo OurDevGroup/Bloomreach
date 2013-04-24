@@ -7,8 +7,10 @@ var themeResponse = getBloomReachTheme(pdict.BRThemePart, pdict.BRThemeName, pdi
 <isprint value="${themeResponse}" encoding="off" >
 
 <isif condition="${pdict.BRThemePart == 'header' && themeResponse == null}">
-<META http-equiv="refresh" content="8;URL=${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}">
-<script type="text/javascript">
-document.location = "${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}";
+<isif condition="${dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect != null}">
+	<META http-equiv="refresh" content="8;URL=${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}">
+	<script type="text/javascript">
+	document.location = "${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}";
 </script>
+</isif>
 </isif>
