@@ -18,9 +18,18 @@ function execute( args : PipelineDictionary ) : Number
 {	
 	var httpClient : HTTPClient = new HTTPClient();
 	var output : String;
+	
+	if(	Site.getCurrent().preferences.custom.BR_ClientID == null || 
+		Site.getCurrent().preferences.custom.BR_AuthID == null ||
+		Site.getCurrent().preferences.custom.BR_Theme_URL == null) {
+			logFailure("BloomReach theme settings not defined.");	
+			return PIPELET_ERROR; 
+	}
+	
 	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
 	var brAuth = Site.getCurrent().preferences.custom.BR_AuthID;
 	var url : String = Site.getCurrent().preferences.custom.BR_Theme_URL + '/' + brClient + '/' + brAuth + '/v1/' + args.BRThemeName + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + args.ReferURL;
+	
 	httpClient.open('GET', url);			
 	httpClient.send();
 	if (httpClient.statusCode == 200)
