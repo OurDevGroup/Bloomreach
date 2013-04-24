@@ -1,4 +1,6 @@
 /**
+* sendFeedFTP.ds
+* Send file via FTP to BloomReach.
 *
 *   @input source : String
 *	@input destination : String

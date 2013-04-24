@@ -3,11 +3,31 @@
 
 <pipeline type="view">
   <description>This pipeline pulls data from Bloomreach for the other services to process</description>
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Fetches full content from BloomReach server and caches it for one day.</description>
+        </text-node>
+        <node-display x="0" y="0"/>
+      </node>
+    </segment>
+  </branch>
+  <branch basename="_ANONYMOUS_BRANCH_2">
+    <segment>
+      <node>
+        <text-node>
+          <description>Parses Fetch to return the HTML for the specific widget requested.</description>
+        </text-node>
+        <node-display x="2" y="0"/>
+      </node>
+    </segment>
+  </branch>
   <branch basename="Fetch">
     <segment>
       <node>
         <start-node name="Fetch" secure="false"/>
-        <node-display x="0" y="0"/>
+        <node-display x="0" y="1"/>
       </node>
       <simple-transition/>
       <node>
@@ -43,7 +63,7 @@
     <segment>
       <node>
         <start-node name="GetWidget" secure="false"/>
-        <node-display x="2" y="0"/>
+        <node-display x="2" y="1"/>
       </node>
       <simple-transition>
         <transition-display>

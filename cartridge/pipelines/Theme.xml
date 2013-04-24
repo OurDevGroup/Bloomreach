@@ -2,11 +2,21 @@
 <?demandware-pipeline version="2.0"?>
 
 <pipeline type="view">
+  <branch basename="_ANONYMOUS_BRANCH_1">
+    <segment>
+      <node>
+        <text-node>
+          <description>Base pipeline to return Thematic content.  This should be styled by BloomReach customer's dev team.</description>
+        </text-node>
+        <node-display x="1" y="0"/>
+      </node>
+    </segment>
+  </branch>
   <branch basename="Show">
     <segment>
       <node>
         <start-node name="Show" secure="false"/>
-        <node-display x="1" y="0"/>
+        <node-display x="1" y="1"/>
       </node>
       <simple-transition>
         <transition-display>
