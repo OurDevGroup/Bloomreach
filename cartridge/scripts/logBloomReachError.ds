@@ -1,3 +1,8 @@
+/**
+* logBloomReachError.ds
+*
+* This script attempts to log to a custom log "BloomReach".  If it fails, it logs to a generic logger.
+*/
 importPackage( dw.system );
 
 function logFailure(msg : String, args : Object)

@@ -1,4 +1,8 @@
 /**
+* getBloomReachTheme.ds
+*
+* This script is responsible for fetching Thematic content from Bloomreach.  It also fetches and processes the BloomReach content cached on the Demandware instance, 
+* retrieving specific portions of the Thematic page for rendering on a customer styled page.
 *
 *	@input CurrentRequest : dw.system.Request 
 *	@input BRThemeName : String

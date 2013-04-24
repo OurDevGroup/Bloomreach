@@ -1,7 +1,7 @@
 /*
-*Meat of the delete old files job.  look in the entire IMPEX directory
-*and delete all feed files of format (feedxxxxxxxx.zip) a configurable number
-*of days old
+* deleteFilesJob.ds
+*
+* Deletes files in the /bloomreach directory in IMPEX older than a number of days specified in site preferences.
 */
 importPackage( dw.system );
 importPackage( dw.io );

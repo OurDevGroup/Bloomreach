@@ -1,4 +1,6 @@
 /**
+* getBloomREachWidget.ds
+*
 * This script returns the widget requested from the
 * cached widget text of our fetch pipeline.
 * It parses the correct portion, based on the type parameter,
