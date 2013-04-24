@@ -1,4 +1,5 @@
 <!--- TEMPLATENAME: redirect.isml --->
 <iscomment>This template should only be rendered if BloomReach is disabled</iscomment>
-
+<isif condition="${dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect != null}">
 	<isredirect location="${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}" />
+</isif>
