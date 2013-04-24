@@ -23,6 +23,11 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
 		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
 	}
 	
+	if(Site.getCurrent().preferences.custom.BR_Widget_URL == null) {
+		logFailure("Bloomreach widget settings not defined.");
+		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
+	}
+	
 	var brURL = Site.getCurrent().preferences.custom.BR_Widget_URL
 	 + '?url='        + url
 	 + '&acct_id='    + accountID
@@ -47,11 +52,19 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 	
 	// if accountID or accountKey are not given, use system defaults
 	if(empty(accountID)){
-	  accountID = Site.getCurrent().preferences.custom.BR_ClientID;
+		if(Site.getCurrent().preferences.custom.BR_ClientID == null) {
+			logFailure("Bloomreach widget settings not defined.");
+			return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
+		}		
+	  	accountID = Site.getCurrent().preferences.custom.BR_ClientID;
 	}
 	
 	if(empty(accountKey)){
-	  accountKey = Site.getCurrent().preferences.custom.BR_AuthID;
+		if(Site.getCurrent().preferences.custom.BR_AuthID == null) {
+			logFailure("Bloomreach widget settings not defined.");
+			return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
+		}			
+	  	accountKey = Site.getCurrent().preferences.custom.BR_AuthID;
 	}
 	
 	// verify required arguments
@@ -87,6 +100,11 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 							'productname', productName, 
 							'pagestatus', pageStatus);
 
+
+	if(Site.getCurrent().preferences.custom.BR_Widget_API_Timeout == null) {
+		logFailure("Bloomreach widget settings not defined.");
+		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
+	}
 						
 	// make the call
 	var text = fetchWidgetText( brURL,Site.getCurrent().preferences.custom.BR_Widget_API_Timeout );
