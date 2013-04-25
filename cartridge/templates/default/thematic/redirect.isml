@@ -1,5 +1,8 @@
 <!--- TEMPLATENAME: redirect.isml --->
-<iscomment>This template should only be rendered if BloomReach is disabled</iscomment>
+<iscomment>
+Used by Theme-Show. Redirects to the predefined page with URL parameter showing that thematics are not working.
+This template should only be rendered if BloomReach is disabled in site preferences
+</iscomment>
 <isif condition="${dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect != null}">
 	<isredirect location="${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}" />
 </isif>

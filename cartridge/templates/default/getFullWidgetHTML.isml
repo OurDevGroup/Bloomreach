@@ -1,3 +1,8 @@
+<iscomment>
+This template is used by BloomReachWidget-Fetch to fetch all the content related to a particualr Demandware URL.
+It then caches said content for 24 hours on the Demandware instance to reduce round trips to Bloomreach, and 
+decrease latency.
+</iscomment>
 <iscache type="relative" hour="24" />
 
 <isscript>

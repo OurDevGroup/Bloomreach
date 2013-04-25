@@ -1,1 +1,4 @@
-<!--- TEMPLATENAME: BRError_blank.isml --->
+<iscomment>
+This template is rendered (or rather not rendered) in the case of failure or disabling of BloomReach widgets and/or pixel.  
+The purpose is to have a clean exit path in these cases so that the rendering of the page is not affected.
+</iscomment>

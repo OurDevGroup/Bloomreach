@@ -1,3 +1,9 @@
+<iscomment>
+This template is used by BloomReachWidget-GetWidget.  It includes a function call that will strip out a requested component
+from the BloomReach content that is fetched and cached by BloomReachWidget-Fetch.  This includes, but is not necessarily limited to
+the header widget, more results widget, and related items widget.
+</iscomment>
+
 <isscript>
 importScript ('int_bloomreach:getBloomReachWidget.ds');
 

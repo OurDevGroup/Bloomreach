@@ -1,4 +1,7 @@
-<!--- this is a sample template used to render a barebones BloomReach Thematic Page --->
+<iscomment>
+This is a sample template used by BloomReachTheme-Show to render a barebones BloomReach Thematic Page.  This template is only used
+for testing purposes.
+</iscomment>
 
 <html>
 <header>
