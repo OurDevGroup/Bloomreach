@@ -17,6 +17,13 @@ var widget = getBloomReachWidget(pdict.BRWidgetType,
 	pdict.BRWidgetProductID,
 	pdict.BRWidgetProductName,
 	pdict.BRWidgetPageStatus);
+	
+var hasData = widget != null && !empty(widget);
+var cacheMin = 2;
+if ( hasData ) cacheMin = 24 * 60;
+var myDate= new Date();
 </isscript>
 <!-- BR Widget -->
+<iscache type="relative" minute="${cacheMin}" />
+
 <isprint value="${widget}" encoding="off" >
