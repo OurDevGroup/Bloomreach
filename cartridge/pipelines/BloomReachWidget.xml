@@ -93,9 +93,9 @@
                 <key-binding alias="BRWidgetAccountKey" key="To_2"/>
                 <key-binding alias="!empty(CurrentHttpParameterMap.url) ? CurrentHttpParameterMap.url.stringValue : ''" key="From_3"/>
                 <key-binding alias="BRWidgetURL" key="To_3"/>
-                <key-binding alias="!empty(CurrentRequest.getHttpUserAgent()) ? CurrentHttpParameterMap.useragent.stringValue : ''" key="From_4"/>
+                <key-binding alias="!empty(CurrentRequest.getHttpUserAgent()) ? CurrentRequest.getHttpUserAgent() : ''" key="From_4"/>
                 <key-binding alias="BRWidgetUserAgent" key="To_4"/>
-                <key-binding alias="!empty(CurrentRequest.getHttpReferer()) ? CurrentHttpParameterMap.referrer.stringValue : ''" key="From_5"/>
+                <key-binding alias="!empty(CurrentRequest.getHttpReferer()) ? CurrentRequest.getHttpReferer() : ''" key="From_5"/>
                 <key-binding alias="BRWidgetReferrer" key="To_5"/>
                 <key-binding alias="!empty(CurrentHttpParameterMap.pageType) ? CurrentHttpParameterMap.pagetype.stringValue : ''" key="From_6"/>
                 <key-binding alias="BRWidgetPageType" key="To_6"/>
