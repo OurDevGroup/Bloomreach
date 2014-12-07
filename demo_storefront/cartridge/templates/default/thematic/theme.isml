@@ -1,0 +1,60 @@
+<iscache type="relative" hour="24" />
+<!doctype html>
+<!--[if lt IE 7]> <html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+
+	<isscript>var pageContext={title:'Storefront',type:'storefront',ns:'storefront'};</isscript>
+	<isinclude template="util/modules"/>
+
+	<iscomment>Omitting HTML head, since the head elements will come from BloomReach</iscomment>
+	<link rel="stylesheet" href="${URLUtils.staticURL('/css/style.css')}" />
+	<isinclude url="${URLUtils.url('Home-SetLayout')}"/>
+	<isinclude template="content/home/pt_storefront_UI"/>
+
+<!-- BEGIN BloomReach Thematic Header -->
+<isscript>
+importScript ('int_bloomreach:getBloomReachTheme.ds'); 
+var themeResponse = getBloomReachTheme("header", pdict.BRThemeName, pdict.CurrentRequest);
+</isscript>
+
+<isif condition="${themeResponse == null}">
+	<isredirect location="${URLUtils.abs(dw.system.Site.getCurrent().preferences.custom.BR_ThemeErrorRedirect,'_thto','1')}" />
+</isif>
+
+<isprint value="${themeResponse}" encoding="off" >
+
+
+<!-- END BloomReach Thematic Header -->
+	
+	
+</head>
+<body>
+
+	<div id="wrapper" class="pt_storefront">
+
+		<isinclude url="${URLUtils.url('Home-IncludeHeader')}"/>
+
+		<div id="main" role="main">
+			
+			<!-- BEGIN BloomReach Thematic Body -->
+			<isscript>
+			var themeResponse = getBloomReachTheme("body", pdict.BRThemeName, pdict.CurrentRequest);
+			</isscript>
+			
+			<isprint value="${themeResponse}" encoding="off" >
+			<!-- END BloomReach Thematic Body -->
+			
+			
+			<isinclude template="components/browsertoolscheck"/>
+		</div>
+
+	    <isinclude template="components/footer/footer"/>
+		<isinclude template="content/home/pt_storefront_VARS"/>
+
+	</div>
+	
+</body>
+</html>

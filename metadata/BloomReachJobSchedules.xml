@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schedules xmlns="http://www.demandware.com/xml/impex/schedules/2007-03-31">
+    <schedule schedule-id="BR Feed">
+        <description/>
+        <enabled-flag>true</enabled-flag>
+        <execution-scope>site</execution-scope>
+        <pipeline>
+            <name>BloomReachFeed</name>
+            <startnode>Start</startnode>
+        </pipeline>
+        <sites>
+            <site site-id="SiteGenesis"/>
+        </sites>
+        <run-once>2013-02-19T04:05:00.000Z</run-once>
+        <notification>
+            <enabled-flag>false</enabled-flag>
+            <hang-detection-enabled-flag>false</hang-detection-enabled-flag>
+            <failure-rule>continue</failure-rule>
+        </notification>
+    </schedule>
+
+    <schedule schedule-id="Delete_Files_By_Date">
+        <description>Delete BloomReach files older than a specified date.  This date can be found within the site preferences.</description>
+        <enabled-flag>true</enabled-flag>
+        <execution-scope>site</execution-scope>
+        <pipeline>
+            <name>BloomReachFeed</name>
+            <startnode>DeleteFilesByDate</startnode>
+        </pipeline>
+        <sites>
+            <site site-id="SiteGenesis"/>
+        </sites>
+        <run-once>2013-02-25T01:25:00.000Z</run-once>
+        <notification>
+            <enabled-flag>true</enabled-flag>
+            <threshold>
+                <success/>
+                <exception/>
+                <error/>
+                <hang/>
+                <retry/>
+            </threshold>
+            <max-execution-time>60</max-execution-time>
+            <hang-detection-enabled-flag>false</hang-detection-enabled-flag>
+            <failure-rule>continue</failure-rule>
+        </notification>
+    </schedule>
+
+</schedules>

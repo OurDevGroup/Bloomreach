@@ -1,0 +1,42 @@
+<isset name="DecoratorTemplate" value="search/pt_productsearchresult" scope="page"/>
+
+<isif condition="${pdict.CurrentHttpParameterMap.format.stringValue == 'ajax'}">
+
+	<isset name="DecoratorTemplate" value="util/pt_empty" scope="page"/>
+	
+</isif>
+
+<isdecorate template="${DecoratorTemplate}">
+
+	<isinclude template="search/components/productsearchbreadcrumbs"/>
+
+
+<isscript>
+	var currentURL = URLUtils.http('Search-Show');
+	var paramMap:HttpParameterMap = pdict.CurrentHttpParameterMap;
+
+	for each(var paramName:String in pdict.CurrentHttpParameterMap.getParameterNames())
+	{
+		var paramValue:String = pdict.CurrentHttpParameterMap.get(paramName).value;
+		currentURL = currentURL.append(paramName,paramValue);
+	}
+</isscript>
+	<div id="primary" class="primary-content">
+		<isreplace/>
+		<iscomponent pipeline="BloomReachWidget-GetWidget" 
+	             type="moreresults" 
+	             pagetype="category"
+				 url="${currentURL.toString()}" />
+
+			</div>
+	
+	<div id="secondary" class="refinements">
+		<isinclude template="search/components/productsearchrefinebar"/>
+		<iscomponent pipeline="BloomReachWidget-GetWidget" 
+	             type="related" 
+	             pagetype="category"
+				 url="${currentURL.toString()}"/>
+	</div>
+
+	
+</isdecorate>

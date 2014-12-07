@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>
+		<attribute-definition attribute-id="BR_FTPPassword">
+                <display-name xml:lang="x-default">BloomReach Password for FTP</display-name>
+                <description xml:lang="x-default">This is the password used when attempting FTP with Bloom Reach</description>
+                <type>password</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value></default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_FTPURL">
+                <display-name xml:lang="x-default">BloomReach FTP URL</display-name>
+                <description xml:lang="x-default">This is the URL when attempting to FTP with Bloom Reach</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>ftp.bloomreach.com</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_FTPUsername">
+                <display-name xml:lang="x-default">BloomReach Username for FTP</display-name>
+                <description xml:lang="x-default">This is the username used when attempting FTP with BloomReach</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value></default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_AuthID">
+                <display-name xml:lang="x-default">BloomReach Account Authentication Token</display-name>
+                <description xml:lang="x-default"></description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value></default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="BR_ClientID">
+                <display-name xml:lang="x-default">BloomReach Client ID</display-name>
+                <description xml:lang="x-default">The client ID used by BloomReach</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value></default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="BR_Theme_URL">
+                <display-name xml:lang="x-default">The Base URL used to pull thematic HTML</display-name>
+                <description xml:lang="x-default">The Base URL used to pull thematic HTML. This URL was provided to you by BloomReach.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>http://thematic.brcdn.com/fetch_thematic</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Fail_Redirect_URL">
+                <display-name xml:lang="x-default">Thematic API failure redirect URL</display-name>
+                <description xml:lang="x-default">This is URL that is redirected to when the Thematic API fails</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>Default-Start</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Enable_Pixel">
+                <display-name xml:lang="x-default">Enable BloomReach Pixel</display-name>
+                <description xml:lang="x-default">Use this boolean to enable or disable BloomReach Pixel site wide.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>false</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Enable_Widget">
+                <display-name xml:lang="x-default">Enable BloomReach Widget</display-name>
+                <description xml:lang="x-default">Use this boolean to enable or disable BloomReach Widget site wide.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>false</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Enable_ThematicAPI">
+                <display-name xml:lang="x-default">Enable BloomReach Thematic API</display-name>
+                <description xml:lang="x-default">Use this boolean to enable or disable BloomReach Thematic API site wide.</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>false</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Widget_URL">
+                <display-name xml:lang="x-default">The Base URL used to pull widget HTML</display-name>
+                <description xml:lang="x-default">The Base URL used to pull widget HTML. This URL was provided to you by BloomReach.</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <field-length>0</field-length>
+                <default-value>http://bsapi-test.brsrvr.com/v2/fetch_widget</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Widget_API_Timeout">
+                <display-name xml:lang="x-default">Widget API Timeout</display-name>
+                <description xml:lang="x-default">Timeout in miliseconds for the Widget API calls</description>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>1000</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Thematic_API_Timeout">
+                <display-name xml:lang="x-default">Thematic API Timeout</display-name>
+                <description xml:lang="x-default">Timeout in miliseconds for the Thematic API calls</description>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>1000</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Thematic_API_Cache">
+                <display-name xml:lang="x-default">Thematic API Cache Time</display-name>
+                <description xml:lang="x-default">Cache in minutes for the Thematic API calls</description>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>5</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_Widget_API_Cache">
+                <display-name xml:lang="x-default">Widget API Cache</display-name>
+                <description xml:lang="x-default">Cache in minutes for the Widget API calls</description>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>5</default-value>
+            </attribute-definition>
+			<attribute-definition attribute-id="BR_FeedFile_Expiration">
+                <display-name xml:lang="x-default">BR_FeedFile_Expiration</display-name>
+                <description xml:lang="x-default">BloomReach feed expiration</description>
+                <type>int</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>7</default-value>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="BR_Preferences">
+                <display-name xml:lang="x-default">BloomReach Preferences</display-name>
+				<attribute attribute-id="BR_ClientID"/>
+				<attribute attribute-id="BR_AuthID"/>
+				<attribute attribute-id="BR_Enable_Pixel"/>
+				<attribute attribute-id="BR_Enable_Widget"/>
+				<attribute attribute-id="BR_Enable_ThematicAPI"/>
+				<attribute attribute-id="BR_Widget_URL"/>
+				<attribute attribute-id="BR_Theme_URL"/>
+				<attribute attribute-id="BR_Widget_API_Timeout"/>
+				<attribute attribute-id="BR_Thematic_API_Timeout"/>
+				<attribute attribute-id="BR_Widget_API_Cache"/>
+				<attribute attribute-id="BR_Thematic_API_Cache"/>
+				<attribute attribute-id="BR_Fail_Redirect_URL"/>
+				<attribute attribute-id="BR_FTPURL"/>
+				<attribute attribute-id="BR_FTPUsername"/>
+				<attribute attribute-id="BR_FTPPassword"/>
+				<attribute attribute-id="BR_FeedFile_Expiration"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+</metadata>
