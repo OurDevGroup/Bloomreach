@@ -9,8 +9,6 @@ decrease latency.
 importScript ("getBloomReachWidget.ds");
 
 var widget = getBloomReachFullWidgetHTML( 
-	pdict.CurrentHttpParameterMap.accountid.stringValue ? pdict.CurrentHttpParameterMap.accountid.stringValue : '', 
-	pdict.CurrentHttpParameterMap.accountkey.stringValue ? pdict.CurrentHttpParameterMap.accountkey : '', 
 	pdict.CurrentHttpParameterMap.url.stringValue ? pdict.CurrentHttpParameterMap.url.stringValue : '', 
 	pdict.CurrentHttpParameterMap.useragent.stringValue ? pdict.CurrentHttpParameterMap.useragent.stringValue : '',
 	pdict.CurrentHttpParameterMap.referrer.stringValue ? pdict.CurrentHttpParameterMap.referrer.stringValue : '',

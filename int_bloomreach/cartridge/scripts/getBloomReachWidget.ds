@@ -5,28 +5,91 @@
 * cached widget text of our fetch pipeline.
 * It parses the correct portion, based on the type parameter,
 * then returns the requested text.
+*
+*   @input CurrentRequest : dw.system.Request
+*   @input pageType : String
+*	@input productId : String
+*   @input productName : String
+*	@input pageStatus : String
+*
+*	@output bloomReachMoreResults : String
+*	@output bloomReachRelatedSearch : String
+*	@output bloomReachHtmlHeader : String
 */
 importPackage( dw.system );
 importPackage( dw.web );
 importPackage( dw.util );
 importPackage( dw.net );
+importPackage( dw.crypto);
 importScript ("logBloomReachError.ds");
 
+function execute( args : PipelineDictionary ) : Number
+{
+	if(!empty(args.CurrentRequest))
+	{
+		var request :Request = args.CurrentRequest;
+		var url : String = Encoding.toURI(request.httpProtocol + '://' + request.httpHost 
+			+ request.httpPath + '?' + request.httpQueryString);
+
+    	var userAgent = !empty(request.httpUserAgent)?Encoding.toURI(request.httpUserAgent):'';
+    	var referrer = !empty(request.httpReferer)?Encoding.toURI(request.httpReferer):'';
+    	var productName = !empty(args.productName)?Encoding.toURI(args.productName):'';
+    	
+		var widgetText = getBloomReachFullWidgetHTML(url, 
+			userAgent, 
+			referrer, 
+			args.pageType, 
+			args.productId, 
+			productName,
+			args.pageStatus) ;
+			
+		
+	var patt  = regExForType( 'related' );
+	var result = patt.exec( widgetText );
+	args.bloomReachRelatedSearch = (result != null && result.length > 1) ? result[1] : "";
+	
+	patt  = regExForType( 'moreresults' );
+	result = patt.exec( widgetText );
+	args.bloomReachMoreResults = (result != null && result.length > 1) ? result[1] : "";
+	
+	patt  = regExForType( 'htmlheader' );
+	result = patt.exec( widgetText );
+	args.bloomReachHtmlHeader = (result != null && result.length > 1) ? result[1] : "";
+	
+   return PIPELET_NEXT;
+   
+	}else{
+		logFailure('CurrentRequest not set');
+		return PIPELET_ERROR
+	}
+	
+}
 /*
  This function is responisble for calling BloomReach's servers and returning the full HTML for widgets
  This function is expected to be called from the BloomReachWidget-GetWidget pipeline.
 */
-function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
+function getBloomReachFullWidgetHTML(url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
 	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
+	if(empty(Site.getCurrent().preferences.custom.BR_ClientID)) {
+		logFailure("BR_ClientID missing from site preferences.");
+		return '<!-- Configuration issue, see custom-BloomReach log for details -->';
+	}		
+  	var accountID = Site.getCurrent().preferences.custom.BR_ClientID;
 	
-	var isValid = validateParametersForBloomReachHTMLFetch(accountID, accountKey, url, userAgent, referrer, pageType);
+	if(empty(Site.getCurrent().preferences.custom.BR_AuthID)) {
+			logFailure("BR_AuthID missing from site preferences.");
+			return '<!-- Configuration issue, see custom-BloomReach log for details -->';
+	}
+	var accountKey = Site.getCurrent().preferences.custom.BR_AuthID;
+	
+	var isValid = validateParametersForWidgetFetch(url, userAgent, referrer, pageType);
 	if(!isValid) {
 		logFailure('getBloomReachWidgetHTML called with invalid parameters, see previous messages');
 		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
 	}
 	
 	if(Site.getCurrent().preferences.custom.BR_Widget_URL == null) {
-		logFailure("Bloomreach widget settings not defined.");
+		logFailure("BR_Widget_URL missing from site preferences.");
 		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
 	}
 	
@@ -50,27 +113,22 @@ function getBloomReachFullWidgetHTML(accountID : String, accountKey : String, ur
  This funciton is responsible for calling a cached pipeline and returning only the widget html requested in the type parameter. 
  This function is expected to be called from the BloomReachWidget-GetWidget pipeline.
 */
-function getBloomReachWidget(type : String, accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
+function getBloomReachWidget(type : String, url : String, userAgent : String, referrer : String, pageType : String, productID : String, productName : String, pageStatus : String) {
 	
-	// if accountID or accountKey are not given, use system defaults
-	if(empty(accountID)){
-		if(Site.getCurrent().preferences.custom.BR_ClientID == null) {
-			logFailure("Bloomreach widget settings not defined.");
-			return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
-		}		
-	  	accountID = Site.getCurrent().preferences.custom.BR_ClientID;
-	}
+	if(empty(Site.getCurrent().preferences.custom.BR_ClientID)) {
+		logFailure("BR_ClientID missing from site preferences.");
+		return '<!-- Configuration issue, see custom-BloomReach log for details -->';
+	}		
+  	var accountID = Site.getCurrent().preferences.custom.BR_ClientID;
 	
-	if(empty(accountKey)){
-		if(Site.getCurrent().preferences.custom.BR_AuthID == null) {
-			logFailure("Bloomreach widget settings not defined.");
-			return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
-		}			
-	  	accountKey = Site.getCurrent().preferences.custom.BR_AuthID;
-	}
+	if(empty(Site.getCurrent().preferences.custom.BR_AuthID)) {
+			logFailure("BR_AuthID missing from site preferences.");
+			return '<!-- Configuration issue, see custom-BloomReach log for details -->';
+	}	
+	var accountKey = Site.getCurrent().preferences.custom.BR_AuthID;
 	
 	// verify required arguments
-	var isValid : Boolean = validateParametersForWidgetFetch(type, accountID, accountKey, url, userAgent, referrer, pageType);
+	var isValid : Boolean = validateParametersForWidgetFetch( url, userAgent, referrer, pageType);
 	if(!isValid) {
 		logFailure('getBloomReachWidget called with invalid parameters, see previous messages');
 		return '<!-- Some parameters are missing from Widget call. See your logs for details -->';
@@ -120,18 +178,23 @@ function getBloomReachWidget(type : String, accountID : String, accountKey : Str
 }
 
 
-function validateParametersForWidgetFetch(type : String, accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String){
+function validateParametersForWidgetFetch(url : String, userAgent : String, referrer : String, pageType : String){
 	var logger : Logger = dw.system.Logger.getLogger('BloomReachWidget', 'BloomReachWidget');
 	var isWidgetFetchParamsValid : Boolean = true;
 	
-	if ( empty(type) ) {
-		logFailure('type is a required parameter');
+	if ( empty(url) ) {
+		logFailure('url is a required parameter');
 		isWidgetFetchParamsValid = false;
 	}
-	
-	var isHTMLFetchParamsValid = validateParametersForBloomReachHTMLFetch(accountID, accountKey, url, userAgent, referrer, pageType);
-
-	return isWidgetFetchParamsValid && isHTMLFetchParamsValid;	
+	if ( empty(userAgent) ) {
+		logFailure('userAgent is a required parameter');
+		isWidgetFetchParamsValid = false;
+	}
+	if ( empty(pageType) ) {
+		logFailure('pageType is a required parameter');
+		isWidgetFetchParamsValid = false;
+	}
+	return isWidgetFetchParamsValid;	
 }
 
 function validateParametersForBloomReachHTMLFetch(accountID : String, accountKey : String, url : String, userAgent : String, referrer : String, pageType : String){
@@ -166,6 +229,7 @@ function fetchWidgetText(url : String, timeout:Number) {
 
 	var httpClient : HTTPClient = new HTTPClient();
 	var text : String;
+	httpClient.enableCaching(86400000);
 	httpClient.open('GET', url);
 	if(!empty(timeout))httpClient.setTimeout(timeout);
 	httpClient.send();

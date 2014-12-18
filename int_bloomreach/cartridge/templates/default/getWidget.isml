@@ -8,8 +8,6 @@ the header widget, more results widget, and related items widget.
 importScript ('int_bloomreach:getBloomReachWidget.ds');
 
 var widget = getBloomReachWidget(pdict.BRWidgetType, 
-	pdict.BRWidgetAccountID, 
-	pdict.BRWidgetAccountKey, 
 	pdict.BRWidgetURL, 
 	pdict.BRWidgetUserAgent, 
 	pdict.BRWidgetReferrer,

@@ -23,12 +23,8 @@
 		currentURL = currentURL.append(paramName,paramValue);
 	}
 	</isscript>
-	<iscomponent pipeline="BloomReachWidget-GetWidget" 
-	             type="moreresults" 
-	             productid="${pdict.Product.getID()}" 
-	             productname="${pdict.Product.getName()}" 
-	             pagetype="product"
-	             url="${currentURL.toString()}"
-	             />
-	<!-- /Related Products --> 
+	<!-- more results -->
+	<isprint value="${pdict.brMoreResults}" encoding=off>
+	
+
 </isdecorate>

@@ -32,9 +32,9 @@ function execute( args : PipelineDictionary ) : Number
 	
 	var brClient = Site.getCurrent().preferences.custom.BR_ClientID;
 	var brAuth = Site.getCurrent().preferences.custom.BR_AuthID;
-	var url : String = Site.getCurrent().preferences.custom.BR_Theme_URL + '/' + brClient + '/' + brAuth + '/v1/' + args.BRThemeName + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + args.ReferURL;
+	var url : String = Site.getCurrent().preferences.custom.BR_Theme_URL + '/' + brClient + '/' + brAuth + '/prod/desktop/v1/' + args.BRThemeName + '.html?user_agent=' + escape(args.CurrentRequest.httpUserAgent) + '&url=' + args.ReferURL;
 	
-	httpClient.open('GET', url);			
+httpClient.open('GET', url);			
 	httpClient.send();
 	if (httpClient.statusCode == 200)
 	{
@@ -56,7 +56,7 @@ function getBloomReachTheme(themePart : String, themeName : String, currentReque
          
 	var url = URLUtils.abs('BloomReachTheme-Fetch', 
 		'theme', themeName, 'refer', referUrl);
-		
+	logFailure(url);
 	httpClient.open('GET', url);			
 	httpClient.send();
 	if (httpClient.statusCode == 200)

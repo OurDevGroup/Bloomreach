@@ -23,19 +23,14 @@
 </isscript>
 	<div id="primary" class="primary-content">
 		<isreplace/>
-		<iscomponent pipeline="BloomReachWidget-GetWidget" 
-	             type="moreresults" 
-	             pagetype="category"
-				 url="${currentURL.toString()}" />
+		<isprint value="${pdict.brMoreResults}" encoding=off>
+
 
 			</div>
 	
 	<div id="secondary" class="refinements">
 		<isinclude template="search/components/productsearchrefinebar"/>
-		<iscomponent pipeline="BloomReachWidget-GetWidget" 
-	             type="related" 
-	             pagetype="category"
-				 url="${currentURL.toString()}"/>
+		<isprint value="${pdict.brRelatedResults}" encoding=off>
 	</div>
 
 	
