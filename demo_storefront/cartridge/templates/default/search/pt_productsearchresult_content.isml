@@ -30,7 +30,7 @@
 	
 	<div id="secondary" class="refinements">
 		<isinclude template="search/components/productsearchrefinebar"/>
-		<isprint value="${pdict.brRelatedResults}" encoding=off>
+		<isprint value="${pdict.brRelatedSearch}" encoding=off>
 	</div>
 
 	

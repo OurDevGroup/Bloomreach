@@ -32,7 +32,7 @@
           <key-binding alias="'category'" key="pageType"/>
           <key-binding alias="brHtmlHeader" key="bloomReachHtmlHeader"/>
           <key-binding alias="brMoreResults" key="bloomReachMoreResults"/>
-          <key-binding alias="brRelatedResults" key="bloomReachRelatedSearch"/>
+          <key-binding alias="brRelatedSearch" key="bloomReachRelatedSearch"/>
           <key-binding alias="CurrentRequest" key="CurrentRequest"/>
         </pipelet-node>
         <node-display x="0" y="1"/>
