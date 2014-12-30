@@ -32,7 +32,8 @@ function execute( args : PipelineDictionary ) : Number
 			+ request.httpPath + '?' + request.httpQueryString);
 
     	var userAgent = !empty(request.httpUserAgent)?Encoding.toURI(request.httpUserAgent):'';
-    	var referrer = !empty(request.httpReferer)?Encoding.toURI(request.httpReferer):'';
+    	//Left out to optimize cache hits
+    	  //var referrer = !empty(request.httpReferer)?Encoding.toURI(request.httpReferer):'';
     	var productName = !empty(args.productName)?Encoding.toURI(args.productName):'';
     	
 		var widgetText = getBloomReachFullWidgetHTML(url, 
